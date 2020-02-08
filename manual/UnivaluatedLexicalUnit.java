@@ -1,8 +1,6 @@
-package jaime;
-
 public class UnivaluatedLexicalUnit extends LexicalUnit {
     
-    public String lexeme(){
+    public String lexeme() throws Exception{
             /* Unsupported Operation */
         throw new Exception();
     }
@@ -11,7 +9,8 @@ public class UnivaluatedLexicalUnit extends LexicalUnit {
         super(row, col, lexClass);
     }
     
-    public String toString(){
-        return "[Class: " + this._lexClass + ", row: " + this._row + ", col: " + this._col + "]";
+
+	public String toString(){
+        return "[Class: " + lexClass() + ", row: " + row() + ", col: " + col() + "]";
     }    
 }

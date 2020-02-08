@@ -1,5 +1,3 @@
-package jaime;
-
 import java.io.Reader;
 import java.io.IOException;
 
@@ -42,8 +40,8 @@ public class LexicalAnalyzer{
     */
     private static enum State{
         INIT, REC_VAR, REC_NUM, REC_SEM, REC_PLUS, REC_MINUS,
-        REC_DEC_NF, REC_DEC, REC_EXP_NF, REC_EXP_AUX, REC_EXP,
-        REC_DIS_NF, REC_DIS, REC_POR, REC_DIV, REC_OPAR, REC_CPAR,
+        REC_DEC_NF, REC_DEC, REC_EXP_NF, REC_AUX_EXP, REC_EXP,
+        REC_DIS_NF, REC_DIS, REC_MULT, REC_DIV, REC_OPAR, REC_CPAR,
         REC_EQU, REC_EQUIV, REC_GT, REC_GET, REC_LT, REC_LET,
         REC_END, REC_END2, REC_EOF
     }
@@ -55,9 +53,9 @@ public class LexicalAnalyzer{
     public LexicalAnalyzer(Reader input) throws IOException {
         this._input = input;
         this._lex = new StringBuffer();
-        this._sigChar = input.read();
-        this._actRow = 1;
-        this._actCol = 1;
+        this._nextChar = input.read();
+        this._curRow = 1;
+        this._curCol = 1;
     }
     
 
@@ -79,7 +77,7 @@ public class LexicalAnalyzer{
                     if(separator())     nextStateIgnored(State.INIT);
                     if(letter())        nextState(State.REC_VAR);
                     if(digit())         nextState(State.REC_NUM);
-                    if(digit())         nextState(State.REC_NUM)
+                    if(mult())			nextState(State.REC_MULT);
                     if(plus())          nextState(State.REC_PLUS);
                     if(minus())         nextState(State.REC_MINUS);
                     if(diseq())         nextState(State.REC_DIS_NF);
@@ -90,12 +88,12 @@ public class LexicalAnalyzer{
                     if(openPar())       nextState(State.REC_OPAR);
                     if(closePar())      nextState(State.REC_CPAR);
                     if(end())           nextState(State.REC_END);
-                    if(eof())           nextState(State.REC_EOF);
+                    if(EOF())           nextState(State.REC_EOF);
                     else error();
                     break;
                 case REC_VAR:
-                    if(letter() || digit() || lowBar)   nextState(State.REC_VAR);
-                    else return unitId();
+                    if(letter() || digit() || lowBar())   nextState(State.REC_VAR);
+                    else return unitID();
                     break;
                 case REC_NUM:
                     if(point())         nextState(State.REC_DEC);
@@ -139,7 +137,7 @@ public class LexicalAnalyzer{
                     else error();
                     break;
                 case REC_DIS:           return unitNonEquiv();
-                case REC_POR:           return unitMult();
+                case REC_MULT:          return unitMult();
                 case REC_DIV:           return unitDiv();
                 case REC_OPAR:          return unitOpenPar();
                 case REC_CPAR:          return unitClosePar();
@@ -158,7 +156,7 @@ public class LexicalAnalyzer{
                     else return unitMinor();
                 case REC_LET:           return unitMinorEqual();
                 case REC_END:
-                    if(separator())     nextState(State.REC_END2);
+                    if(end())           nextState(State.REC_END2);
                     else error();
                     break;
                 case REC_END2:          return unitEnd();
@@ -195,12 +193,12 @@ public class LexicalAnalyzer{
     /*      END OF LINE SKIP
         1. Reads '\n' character and updats (row, col).
     */
-    public void skipEOL(){
+    public void skipEOL() throws IOException{
         int i = 1;
         
-        for(; i < _SN.length(); ++i){
+        for(; i < _LS.length(); ++i){
             this._nextChar = this._input.read();
-            if(this._nextChar != this._SN.charAt(i))
+            if(this._nextChar != _LS.charAt(i))
                 error();
         }
         
@@ -215,40 +213,39 @@ public class LexicalAnalyzer{
     private void nextChar() throws IOException {
         this._nextChar = this._input.read();  /* Read Character from Reader */
         
-        if(this._nextChar == _SN.charAt(0))
+        if(this._nextChar == _LS.charAt(0))
             skipEOL();
         if(this._nextChar == '\n'){
-            this._actRow = this._actRow + 1;
-            this._actCol = 0;
+            this._curRow = this._curRow + 1;
+            this._curCol = 0;
         }
         else{
-            this._actCol = this._actCol + 1;
+            this._curCol = this._curCol + 1;
         }
     }
     
     
         /* Character-Recognizers */
-    private boolean letter()    { return this._nextChar >= 'a' && this._nextChar <= 'z' || this._nextChar >= 'A' && this._nextChar <= 'Z'};
-    private boolean lowBar()    { return this._nextChar == '_'};
-    private boolean posDig()    { return this._nextChar >= '1' && this._nextChar <= '9'};
-    private boolean digit()     { return this._nextChar >= '0' && this._nextChar <= '9'};
-    private boolean zero()      { return this._nextChar == '0'};
-    private boolean plus()      { return this._nextChar == '+'};
-    private boolean minus()     { return this._nextChar == '-'};
-    private boolean mult()      { return this._nextChar == '*'};
-    private boolean div()       { return this._nextChar == '/'};
-    private boolean openPar()   { return this._nextChar == '('};
-    private boolean closePar()  { return this._nextChar == ')'};
-    private boolean minor()     { return this._nextChar == '<'};
-    private boolean major()     { return this._nextChar == '>'};
-    private boolean semicolon() { return this._nextChar == ';'};
-    private boolean separator() { return this._nextChar == '&'};
-    private boolean space()     { return this._nextChar == ' ' /* || this._nextChar == '\t' */};
-    private boolean exp()       { return this._nextChar == 'e'};
-    private boolean equal()     { return this._nextChar == '='};
-    private boolean diseq()     { return this._nextChar == '!'};
-    private boolean point()     { return this._nextChar == '.'};
-    private boolean EOF()       { return this._nextChar == -1};
+    private boolean letter()    { return this._nextChar >= 'a' && this._nextChar <= 'z' || this._nextChar >= 'A' && this._nextChar <= 'Z';};
+    private boolean lowBar()    { return this._nextChar == '_';};
+    private boolean posDig()    { return this._nextChar >= '1' && this._nextChar <= '9';};
+    private boolean digit()     { return this._nextChar >= '0' && this._nextChar <= '9';};
+    private boolean plus()      { return this._nextChar == '+';};
+    private boolean minus()     { return this._nextChar == '-';};
+    private boolean mult()      { return this._nextChar == '*';};
+    private boolean div()       { return this._nextChar == '/';};
+    private boolean openPar()   { return this._nextChar == '(';};
+    private boolean closePar()  { return this._nextChar == ')';};
+    private boolean minor()     { return this._nextChar == '<';};
+    private boolean major()     { return this._nextChar == '>';};
+    private boolean semicolon() { return this._nextChar == ';';};
+    private boolean end()       { return this._nextChar == '&';};
+    private boolean exp()       { return this._nextChar == 'e';};
+    private boolean equal()     { return this._nextChar == '=';};
+    private boolean diseq()     { return this._nextChar == '!';};
+    private boolean point()     { return this._nextChar == '.';};
+    private boolean EOF()       { return this._nextChar == -1;};
+    private boolean separator() { return this._nextChar == ' ' || this._nextChar == '\t' || this._nextChar == '\n';};
     
 
     /*      unitX GENERATOR
@@ -278,71 +275,71 @@ public class LexicalAnalyzer{
     }
     
     private LexicalUnit unitNumber(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUMBER);
+        return (LexicalUnit) new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUMBER);
     }
     
     private LexicalUnit unitPlus(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.PLUS);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.PLUS);
     }
     
     private LexicalUnit unitMinus(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MINUS);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MINUS);
     }
     
     private LexicalUnit unitMult(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MULT);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MULT);
     }
     
     private LexicalUnit unitDiv(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.DIV);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.DIV);
     }
     
     private LexicalUnit unitOpenPar(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.OPPAR);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.OPPAR);
     }
     
     private LexicalUnit unitClosePar(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.CLPAR);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.CLPAR);
     }
     
     private LexicalUnit unitEqual(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.EQUAL);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.EQUAL);
     }
     
     private LexicalUnit unitSC(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.SEMICOLON);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.SEMICOLON);
     }
     
     private LexicalUnit unitEquiv(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.EQUIV);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.EQUIV);
     }
     
     private LexicalUnit unitNonEquiv(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NONEQUIV);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NONEQUIV);
     }
     
     private LexicalUnit unitMajor(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MAJOR);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MAJOR);
     }
     
     private LexicalUnit unitMinor(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MINOR);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MINOR);
     }
     
     private LexicalUnit unitMajorEqual(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MEQUAL);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MEQUAL);
     }
     
     private LexicalUnit unitMinorEqual(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.LEQUAL);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.LEQUAL);
     }
     
     private LexicalUnit unitEnd(){
-		return new UnidadLexicaUnivaluada(this._initRow, this._initCol, ClaseLexica.END);
+		return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.END);
     }
     
     private LexicalUnit unitEOF(){
-        return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.EOF);
+        return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.EOF);
     }
     
 
@@ -350,7 +347,7 @@ public class LexicalAnalyzer{
         1. Prints error with (row, col) associated.
     */  
     private void error(){
-        System.out.println("Character at (" + this._actRow + ", " + this._actCol + ") unrecognizable");
+        System.out.println("Character at (" + this._curRow + ", " + this._curCol + ") unrecognizable");
         System.exit(1);
     }
 }

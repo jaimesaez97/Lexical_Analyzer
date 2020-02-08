@@ -1,5 +1,3 @@
-package jaime;
-
 /*
     SEMICOLON: ;
     OPPAR: (
@@ -8,6 +6,7 @@ package jaime;
 */
 public enum LexicalClass{
     EOF, SEPARATOR, NUM, NUMBER, BOOL, VAR, SEMICOLON, TRUE, 
-    FALSE, EQUAL, PLUS, MINUS, POR, DIV, OR, AND, NOT, MAJOR, 
-    MINOR, MEQUAL, LEQUAL, EQUIV, NONEQUIV, NEG, OPPAR, CLPAR
+    FALSE, EQUAL, PLUS, MINUS, MULT, DIV, OR, AND, NOT, MAJOR, 
+    MINOR, MEQUAL, LEQUAL, EQUIV, NONEQUIV, NEG, OPPAR, CLPAR, 
+    END
 }

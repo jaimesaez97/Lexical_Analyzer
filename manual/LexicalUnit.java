@@ -1,5 +1,3 @@
-package jaime;
-
 public abstract class LexicalUnit{
     
     private LexicalClass _class;
@@ -9,7 +7,7 @@ public abstract class LexicalUnit{
     public LexicalUnit(int row, int col, LexicalClass lexClass){
         this._row = row;
         this._col = col;
-        this._class = lexclass;
+        this._class = lexClass;
     }
     
     

@@ -1,5 +1,3 @@
-package jaime;
-
 public class MultivaluatedLexicalUnit extends LexicalUnit {
     
     private String _lexeme;
@@ -14,6 +12,6 @@ public class MultivaluatedLexicalUnit extends LexicalUnit {
     }
     
     public String toString(){
-        return "[Class: " + this._lexClass + ", row: " + this._row + ", col: " + this._col + ", lexeme: " + this._lexeme + "]";
+        return "[Class: " + lexClass() + ", row: " + row() + ", col: " + col() + ", lexeme: " + this._lexeme + "]";
     }
 }
