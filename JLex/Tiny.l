@@ -25,7 +25,9 @@ posDigit = [1-9]
 digit = ({posDigit}|0)
 decimalPart = \.{digit}*{posDigit}
 exponencialPart = \e(\+,\-])?{digit}+
-separator = [ \t\r\b\n]
+separator = [ ,\t,\r,\b,\n]
+real = num
+int = num
 num = num
 bool = bool
 true = true
@@ -33,17 +35,17 @@ false = false
 and = and
 or = or
 not = not
-identifier = {letter}({letter}|{digit}|\_)*
+iden = {letter}({letter}|{digit}|\_)*
 number = ([\+,\-])?{digit}+({decimalPart})?({exponencialPart})?
 plusOp = \+
 difOp = \-
 multOp = \*
-divOp = /
+divOp = \/
 openPar = \(
 closePar = \)
 equal = \=
-dis = \!
-coma = \,
+equiv = \=\=
+nonequiv = \!\=
 mayor = \>
 mayorEqual = \>\=
 minor = \<
@@ -53,14 +55,16 @@ sc = \;
 
 
 %%
-{separator}				{ }
+{separator}				{}
+{real}					{ return ops.unitNum(); }
+{int}					{ return ops.unitNum(); }
 {num}					{ return ops.unitNum(); }
 {bool}					{ return ops.unitBool(); }
 {number}				{ return ops.unitNumber(); }
 {true}					{ return ops.unitTrue(); }
 {false}					{ return ops.unitFalse(); }
-{SCoperator}			{ return ops.unitSC(); }
-{EndOperator}			{ return ops.unitEnd(); }
+{sc}					{ return ops.unitSC(); }
+{end}					{ return ops.unitEnd(); }
 {equal}					{ return ops.unitEqual(); }
 {plusOp}				{ return ops.unitPlus(); }
 {difOp}					{ return ops.unitMinus(); }
