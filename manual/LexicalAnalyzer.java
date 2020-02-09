@@ -73,22 +73,22 @@ public class LexicalAnalyzer{
         while(true){
             switch(this._status){
                 case INIT:
-                    if(semicolon())     nextState(State.REC_SEM);
-                    if(separator())     nextStateIgnored(State.INIT);
-                    if(letter())        nextState(State.REC_VAR);
-                    if(digit())         nextState(State.REC_NUM);
-                    if(mult())			nextState(State.REC_MULT);
-                    if(plus())          nextState(State.REC_PLUS);
-                    if(minus())         nextState(State.REC_MINUS);
-                    if(diseq())         nextState(State.REC_DIS_NF);
-                    if(equal())         nextState(State.REC_EQU);
-                    if(div())           nextState(State.REC_DIV);
-                    if(minor())         nextState(State.REC_LT);
-                    if(major())         nextState(State.REC_GT);
-                    if(openPar())       nextState(State.REC_OPAR);
-                    if(closePar())      nextState(State.REC_CPAR);
-                    if(end())           nextState(State.REC_END);
-                    if(EOF())           nextState(State.REC_EOF);
+                    if(semicolon())     	nextState(State.REC_SEM);
+                    else if(separator())    nextStateIgnored(State.INIT);
+                    else if(letter())       nextState(State.REC_VAR);
+                    else if(digit())        nextState(State.REC_NUM);
+                    else if(mult())			nextState(State.REC_MULT);
+                    else if(plus())         nextState(State.REC_PLUS);
+                    else if(minus())        nextState(State.REC_MINUS);
+                    else if(diseq())        nextState(State.REC_DIS_NF);
+                    else if(equal())        nextState(State.REC_EQU);
+                    else if(div())          nextState(State.REC_DIV);
+                    else if(minor())        nextState(State.REC_LT);
+                    else if(major())        nextState(State.REC_GT);
+                    else if(openPar())      nextState(State.REC_OPAR);
+                    else if(closePar())     nextState(State.REC_CPAR);
+                    else if(end())          nextState(State.REC_END);
+                    else if(EOF())          nextState(State.REC_EOF);
                     else error();
                     break;
                 case REC_VAR:
@@ -96,18 +96,20 @@ public class LexicalAnalyzer{
                     else return unitID();
                     break;
                 case REC_NUM:
-                    if(point())         nextState(State.REC_DEC);
-                    else if (exp())     nextState(State.REC_EXP);
+                    if(point())         nextState(State.REC_DEC_NF);
+                    else if (exp())     nextState(State.REC_EXP_NF);
                     else if(digit())    nextState(State.REC_NUM);
                     else return unitNumber();
-                case REC_SEM:
-                    return unitSC();
+                    break;
+                case REC_SEM:           return unitSC();
                 case REC_PLUS:
-                    if(posDig())        nextState(State.REC_NUM);
+                    if(digit())			nextState(State.REC_NUM);
+                    // should be :if(posDigit())   nextState(State.REC_NUM);
                     else return unitPlus();
                     break;
                 case REC_MINUS:
-                    if(posDig())        nextState(State.REC_NUM);
+                    if(digit())        nextState(State.REC_NUM);
+                    // should be :if(posDigit())   nextState(State.REC_NUM);
                     else return unitMinus();
                     break;
                 case REC_DEC_NF:
@@ -154,6 +156,7 @@ public class LexicalAnalyzer{
                 case REC_LT:
                     if(equal())         nextState(State.REC_LET);
                     else return unitMinor();
+                    break;
                 case REC_LET:           return unitMinorEqual();
                 case REC_END:
                     if(end())           nextState(State.REC_END2);
@@ -275,7 +278,8 @@ public class LexicalAnalyzer{
     }
     
     private LexicalUnit unitNumber(){
-        return (LexicalUnit) new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUMBER);
+        //return (LexicalUnit) new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUMBER);
+    	return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUM, this._lex.toString());
     }
     
     private LexicalUnit unitPlus(){
@@ -348,6 +352,7 @@ public class LexicalAnalyzer{
     */  
     private void error(){
         System.out.println("Character at (" + this._curRow + ", " + this._curCol + ") unrecognizable");
+        System.out.println(" 	" + Integer.toString(this._nextChar));
         System.exit(1);
     }
 }
