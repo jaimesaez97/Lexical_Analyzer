@@ -39,11 +39,11 @@ public class LexicalAnalyzer{
         REC_EOF: EOF
     */
     private static enum State{
-        INIT, REC_VAR, REC_NUM, REC_SEM, REC_PLUS, REC_MINUS,
-        REC_DEC_NF, REC_DEC, REC_EXP_NF, REC_AUX_EXP, REC_EXP,
-        REC_DIS_NF, REC_DIS, REC_MULT, REC_DIV, REC_OPAR, REC_CPAR,
-        REC_EQU, REC_EQUIV, REC_GT, REC_GET, REC_LT, REC_LET,
-        REC_END, REC_END2, REC_EOF
+        INIT, REC_SEM, REC_END, REC_END2, REC_EOF, REC_VAR, 
+        REC_NUM, REC_PLUS, REC_MINUS, REC_DEC_NF, REC_DEC_ZERO,
+        REC_DEC, REC_EXP_NF, REC_EXP, REC_MULT, REC_ZERO,
+        REC_DIV, REC_DIS_NF, REC_DIS, REC_EQU, REC_EQUIV, REC_LT,
+        REC_LET, REC_GT, REC_GET, REC_OPAR, REC_CPAR
     }
     
     private State _status;
@@ -73,97 +73,104 @@ public class LexicalAnalyzer{
         while(true){
             switch(this._status){
                 case INIT:
-                    if(semicolon())     	nextState(State.REC_SEM);
-                    else if(separator())    nextStateIgnored(State.INIT);
-                    else if(letter())       nextState(State.REC_VAR);
-                    else if(digit())        nextState(State.REC_NUM);
-                    else if(mult())			nextState(State.REC_MULT);
-                    else if(plus())         nextState(State.REC_PLUS);
-                    else if(minus())        nextState(State.REC_MINUS);
-                    else if(diseq())        nextState(State.REC_DIS_NF);
-                    else if(equal())        nextState(State.REC_EQU);
-                    else if(div())          nextState(State.REC_DIV);
-                    else if(minor())        nextState(State.REC_LT);
-                    else if(major())        nextState(State.REC_GT);
-                    else if(openPar())      nextState(State.REC_OPAR);
-                    else if(closePar())     nextState(State.REC_CPAR);
-                    else if(end())          nextState(State.REC_END);
-                    else if(EOF())          nextState(State.REC_EOF);
-                    else error();
-                    break;
-                case REC_VAR:
-                    if(letter() || digit() || lowBar())   nextState(State.REC_VAR);
-                    else return unitID();
-                    break;
-                case REC_NUM:
-                    if(point())         nextState(State.REC_DEC_NF);
-                    else if (exp())     nextState(State.REC_EXP_NF);
-                    else if(digit())    nextState(State.REC_NUM);
-                    else return unitNumber();
-                    break;
-                case REC_SEM:           return unitSC();
-                case REC_PLUS:
-                    if(digit())			nextState(State.REC_NUM);
-                    // should be :if(posDigit())   nextState(State.REC_NUM);
-                    else return unitPlus();
-                    break;
-                case REC_MINUS:
-                    if(digit())        nextState(State.REC_NUM);
-                    // should be :if(posDigit())   nextState(State.REC_NUM);
-                    else return unitMinus();
-                    break;
-                case REC_DEC_NF:
-                    if(digit())         nextState(State.REC_DEC);
-                    else error();
-                    break;
-                case REC_DEC:
-                    if(digit())         nextState(State.REC_DEC);
-                    else if(exp())           nextState(State.REC_EXP_NF);
-                    else return unitNumber();
-                    break;
-                case REC_EXP_NF:
-                    if(plus()||minus()) nextState(State.REC_AUX_EXP);
-                    if(digit())         nextState(State.REC_EXP);
-                    else error();
-                    break;
-                case REC_AUX_EXP:
-                    if(digit())         nextState(State.REC_EXP);
-                    else error();
-                    break;
-                case REC_EXP:
-                    if(digit())         nextState(State.REC_EXP);
-                    else return unitNumber();
-                    break;
-                case REC_DIS_NF:
-                    if(equal())         nextState(State.REC_DIS);
-                    else error();
-                    break;
-                case REC_DIS:           return unitNonEquiv();
-                case REC_MULT:          return unitMult();
-                case REC_DIV:           return unitDiv();
-                case REC_OPAR:          return unitOpenPar();
-                case REC_CPAR:          return unitClosePar();
-                case REC_EQU:
-                    if(equal())         nextState(State.REC_EQUIV);
-                    else return unitEqual();
-                    break;
-                case REC_EQUIV:         return unitEquiv();
-                case REC_GT:
-                    if(equal())         nextState(State.REC_GET);
-                    else return unitMajor();
-                    break;
-                case REC_GET:           return unitMajorEqual();
-                case REC_LT:
-                    if(equal())         nextState(State.REC_LET);
-                    else return unitMinor();
-                    break;
-                case REC_LET:           return unitMinorEqual();
+                	if(separator())			nextStateIgnored(State.INIT);
+                	else if(semicolon())	nextState(State.REC_SEM);
+                	else if(end())			nextState(State.REC_END);
+                	else if(EOF())			nextState(State.REC_EOF);
+                	else if(letter())		nextState(State.REC_VAR);
+                	else if(posDig())		nextState(State.REC_NUM);
+                	else if(minus())		nextState(State.REC_MINUS);
+                	else if(plus())			nextState(State.REC_PLUS);
+                	else if(zero())			nextState(State.REC_ZERO);
+                	else if(mult())			nextState(State.REC_MULT);
+                	else if(div())			nextState(State.REC_DIV);
+                	else if(diseq())		nextState(State.REC_DIS_NF);
+                	else if(equal())		nextState(State.REC_EQU);
+                	else if(minor())		nextState(State.REC_LT);
+                	else if(mayor())		nextState(State.REC_GT);
+                	else if(openPar())		nextState(State.REC_OPAR);
+                	else if(closePar())		nextState(State.REC_CPAR);
+                	else error();
+                	break;
+                case REC_SEM:				return unitSC();
                 case REC_END:
-                    if(end())           nextState(State.REC_END2);
-                    else error();
-                    break;
-                case REC_END2:          return unitEnd();
-                case REC_EOF:           return unitEOF();
+                	if(end())				nextState(State.REC_END2);
+                	else error();
+                	break;
+                case REC_END2:				return unitEnd();
+                case REC_EOF:				return unitEOF();
+                case REC_VAR:
+                	if(letter() || digit() || lowBar()) nextState(State.REC_VAR);
+                	else return unitID();
+                	break;
+                case REC_NUM:
+                	if(digit())				nextState(State.REC_NUM);
+                	else if(point())		nextState(State.REC_DEC_NF);
+                	else if(exp())			nextState(State.REC_EXP_NF);
+                	else return unitNumber();
+                	break;
+                case REC_PLUS:
+                	if(posDig())			nextState(State.REC_NUM);
+                	else if(zero())			nextState(State.REC_ZERO);
+                	else return unitPlus();
+                	break;
+                case REC_MINUS:
+                	if(posDig())			nextState(State.REC_NUM);
+                	else if(zero())			nextState(State.REC_ZERO);
+                	else return unitMinus();
+                	break;
+                case REC_DEC_NF:
+                	if(zero())				nextState(State.REC_DEC_ZERO);
+                	else if(posDig())		nextState(State.REC_DEC);
+                	else error();
+                	break;
+                case REC_DEC_ZERO:
+                	if(posDig())			nextState(State.REC_DEC);
+                	else if(zero())			nextState(State.REC_DEC_ZERO);
+                	else return unitNumber();
+                	break;
+                case REC_DEC:
+                	if(zero())				nextState(State.REC_DEC_NF);
+                	else if(posDig())		nextState(State.REC_DEC);
+                	else if(exp())			nextState(State.REC_EXP_NF);
+                	else return unitNumber();
+                	break;
+                case REC_EXP_NF:
+                	if(plus() || minus() || digit()) nextState(State.REC_EXP);
+                	else error();
+                	break;
+                case REC_EXP:
+                	if(posDig())			nextState(State.REC_EXP);
+                	else return unitNumber();
+                	break;
+                case REC_ZERO:
+                	if(point())				nextState(State.REC_DEC_NF);
+                	else if(exp())			nextState(State.REC_EXP_NF);
+                	else return unitNumber();
+                	break;
+                case REC_MULT:				return unitMult();
+                case REC_DIV:				return unitDiv();
+                case REC_DIS_NF:
+                	if(equal())				nextState(State.REC_DIS);
+                	else error();
+                	break;
+                case REC_DIS:				return unitNonEquiv();
+                case REC_EQU:
+                	if(equal())				nextState(State.REC_EQUIV);
+                	else return unitEqual();
+                	break;
+                case REC_EQUIV:				return unitEquiv();
+                case REC_LT:
+                	if(equal())				nextState(State.REC_LET);
+                	else return unitMinor();
+                	break;
+                case REC_LET:				return unitMinorEqual();
+                case REC_GT:
+                	if(equal())				nextState(State.REC_GET);
+                	else return unitMayor();
+                case REC_GET:				return unitMayorEqual();
+                case REC_CPAR:				return unitClosePar();
+                case REC_OPAR:				return unitOpenPar();
             }
         }
     }
@@ -211,6 +218,9 @@ public class LexicalAnalyzer{
     /*      READ NEXT CHARACTER
         1. Read next character from _input.read() into _nextChar.
         2. Updates (row, col).
+        	- If next char == LineSeparator, skip End of Line
+        	- If next char == '\n', update row,col to next line
+        	- If not, column++.
 
     */
     private void nextChar() throws IOException {
@@ -227,12 +237,12 @@ public class LexicalAnalyzer{
         }
     }
     
-    
-        /* Character-Recognizers */
+    /* CHAR RECOGNIZERS */
     private boolean letter()    { return this._nextChar >= 'a' && this._nextChar <= 'z' || this._nextChar >= 'A' && this._nextChar <= 'Z';};
     private boolean lowBar()    { return this._nextChar == '_';};
     private boolean posDig()    { return this._nextChar >= '1' && this._nextChar <= '9';};
     private boolean digit()     { return this._nextChar >= '0' && this._nextChar <= '9';};
+    private boolean zero()		{ return this._nextChar == '0'; };
     private boolean plus()      { return this._nextChar == '+';};
     private boolean minus()     { return this._nextChar == '-';};
     private boolean mult()      { return this._nextChar == '*';};
@@ -240,7 +250,7 @@ public class LexicalAnalyzer{
     private boolean openPar()   { return this._nextChar == '(';};
     private boolean closePar()  { return this._nextChar == ')';};
     private boolean minor()     { return this._nextChar == '<';};
-    private boolean major()     { return this._nextChar == '>';};
+    private boolean mayor()     { return this._nextChar == '>';};
     private boolean semicolon() { return this._nextChar == ';';};
     private boolean end()       { return this._nextChar == '&';};
     private boolean exp()       { return this._nextChar == 'e';};
@@ -251,17 +261,17 @@ public class LexicalAnalyzer{
     private boolean separator() { return this._nextChar == ' ' || this._nextChar == '\t' || this._nextChar == '\n';};
     
 
-    /*      unitX GENERATOR
-        1. Generates a Univaluated Lexaical UYnit
 
-    */
-
+    /* LEXICAL UNIT GENERATORS */
+    
     private LexicalUnit unitID(){
         switch(this._lex.toString()){
             case "bool":
                 return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.BOOL);
-            case "num":
-                return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUM);
+            case "int":
+                return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.INT);
+            case "real":
+            	return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.REAL);
             case "true":
                 return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.TRUE);
             case "false":
@@ -278,7 +288,6 @@ public class LexicalAnalyzer{
     }
     
     private LexicalUnit unitNumber(){
-        //return (LexicalUnit) new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUMBER);
     	return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUM, this._lex.toString());
     }
     
@@ -322,7 +331,7 @@ public class LexicalAnalyzer{
         return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NONEQUIV);
     }
     
-    private LexicalUnit unitMajor(){
+    private LexicalUnit unitMayor(){
         return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MAJOR);
     }
     
@@ -330,7 +339,7 @@ public class LexicalAnalyzer{
         return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MINOR);
     }
     
-    private LexicalUnit unitMajorEqual(){
+    private LexicalUnit unitMayorEqual(){
         return new UnivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.MEQUAL);
     }
     
