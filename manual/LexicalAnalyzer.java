@@ -1,4 +1,4 @@
-import java.io.Reader;
+	import java.io.Reader;
 import java.io.IOException;
 
 public class LexicalAnalyzer{
@@ -17,14 +17,14 @@ public class LexicalAnalyzer{
         REC_SEM: ;
         REC_PLUS: +
         REC_MINUS: -
-        REC_DEC_NF: decimal (no terminado, sólo ha encontrado .)
+        REC_DEC_NF: decimal (no terminado, sÃ³lo ha encontrado .)
         REC_DEC: decimal
         REC_EXP_NF: exponente (solo ha encontrado e)
-        REC_EXP_AUX: exponente (solo ha encontrado e+ ó e-)
+        REC_EXP_AUX: exponente (solo ha encontrado e+ Ã³ e-)
         REC_EXP: exponente
         REC_DIS_NF: !
         REC_DIS: !=
-        REC_PÒR: *
+        REC_PÃ’R: *
         REC_DIV: /
         REC_OPAR: (
         REC_CPAR: )
@@ -41,9 +41,10 @@ public class LexicalAnalyzer{
     private static enum State{
         INIT, REC_SEM, REC_END, REC_END2, REC_EOF, REC_VAR, 
         REC_NUM, REC_PLUS, REC_MINUS, REC_DEC_NF, REC_DEC_ZERO,
-        REC_DEC, REC_EXP_NF, REC_EXP, REC_MULT, REC_ZERO,
-        REC_DIV, REC_DIS_NF, REC_DIS, REC_EQU, REC_EQUIV, REC_LT,
-        REC_LET, REC_GT, REC_GET, REC_OPAR, REC_CPAR
+        REC_DEC, REC_EXP_NF, REC_EXP_AUX, REC_EXP_ZERO, REC_EXP, 
+        REC_MULT, REC_ZERO,REC_DIV, REC_DIS_NF, REC_DIS, REC_EQU, 
+        REC_EQUIV, REC_LT, REC_LET, REC_GT, REC_GET, REC_OPAR, 
+        REC_CPAR
     }
     
     private State _status;
@@ -136,13 +137,21 @@ public class LexicalAnalyzer{
                 	else return unitNumber();
                 	break;
                 case REC_EXP_NF:
-                	if(plus() || minus() || digit()) nextState(State.REC_EXP);
+                	if(posDig())			nextState(State.REC_EXP);
+                	else if(zero())			nextState(State.REC_EXP_ZERO);
+                	else if(plus() || minus()) nextState(State.REC_EXP_AUX);
+                	else error();
+                	break;
+                case REC_EXP_AUX:
+                	if(posDig())			nextState(State.REC_EXP);
+                	else if(zero())			nextState(State.REC_EXP_ZERO);
                 	else error();
                 	break;
                 case REC_EXP:
                 	if(posDig())			nextState(State.REC_EXP);
                 	else return unitNumber();
                 	break;
+                case REC_EXP_ZERO:			return unitNumber();
                 case REC_ZERO:
                 	if(point())				nextState(State.REC_DEC_NF);
                 	else if(exp())			nextState(State.REC_EXP_NF);
@@ -361,7 +370,6 @@ public class LexicalAnalyzer{
     */  
     private void error(){
         System.out.println("Character at (" + this._curRow + ", " + this._curCol + ") unrecognizable");
-        System.out.println(" 	" + Integer.toString(this._nextChar));
         System.exit(1);
     }
 }
