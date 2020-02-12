@@ -1,3 +1,5 @@
+# java -cp jlex.jar JLex.Main List.l
+
 package jaime;
 
 %%
@@ -5,7 +7,6 @@ package jaime;
 %class TinyLexicalAnalyzer
 %type LexicalUnit
 %unicode
-%%
 
 %{
     private ALexOperations ops;
@@ -14,7 +15,7 @@ package jaime;
 %}
 
 %eofval{
-    return ops.EOFunit();
+    System.out.println("Unexpected character at row: " + row() + ", lexeme: " + lexeme() + ".);
 %}
 
 %init{
@@ -52,7 +53,6 @@ integer     = {digPos}{digit}*
 real        = ({integer}|0){decimalPart}
 exponential = {real}{exponenPart}
 
-num = num
 int = int
 real = real
 bool = bool
@@ -90,7 +90,7 @@ not = not
 
 {variable}          {return ops.unitID();}
 {real}              {return ops.unitNumber();}
-{exponencial}       {return ops.unitNumber();}
+{exponential}       {return ops.unitNumber();}
 {integer}           {return ops.unitNumber();}
 
-[^]                 {ops.error();}
+[^]		    {ops.error(); }
