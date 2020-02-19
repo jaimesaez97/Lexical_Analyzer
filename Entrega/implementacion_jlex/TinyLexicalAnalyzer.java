@@ -239,19 +239,19 @@ class TinyLexicalAnalyzer {
 		/* 28 */ YY_NO_ANCHOR,
 		/* 29 */ YY_NO_ANCHOR,
 		/* 30 */ YY_NO_ANCHOR,
-		/* 31 */ YY_NOT_ACCEPT,
-		/* 32 */ YY_NO_ANCHOR,
+		/* 31 */ YY_NO_ANCHOR,
+		/* 32 */ YY_NOT_ACCEPT,
 		/* 33 */ YY_NO_ANCHOR,
 		/* 34 */ YY_NO_ANCHOR,
-		/* 35 */ YY_NOT_ACCEPT,
-		/* 36 */ YY_NO_ANCHOR,
+		/* 35 */ YY_NO_ANCHOR,
+		/* 36 */ YY_NOT_ACCEPT,
 		/* 37 */ YY_NO_ANCHOR,
-		/* 38 */ YY_NOT_ACCEPT,
-		/* 39 */ YY_NO_ANCHOR,
+		/* 38 */ YY_NO_ANCHOR,
+		/* 39 */ YY_NOT_ACCEPT,
 		/* 40 */ YY_NO_ANCHOR,
-		/* 41 */ YY_NO_ANCHOR,
+		/* 41 */ YY_NOT_ACCEPT,
 		/* 42 */ YY_NO_ANCHOR,
-		/* 43 */ YY_NO_ANCHOR,
+		/* 43 */ YY_NOT_ACCEPT,
 		/* 44 */ YY_NO_ANCHOR,
 		/* 45 */ YY_NO_ANCHOR,
 		/* 46 */ YY_NO_ANCHOR,
@@ -266,35 +266,39 @@ class TinyLexicalAnalyzer {
 		/* 55 */ YY_NO_ANCHOR,
 		/* 56 */ YY_NO_ANCHOR,
 		/* 57 */ YY_NO_ANCHOR,
-		/* 58 */ YY_NO_ANCHOR
+		/* 58 */ YY_NO_ANCHOR,
+		/* 59 */ YY_NO_ANCHOR,
+		/* 60 */ YY_NO_ANCHOR,
+		/* 61 */ YY_NO_ANCHOR
 	};
 	private int yy_cmap[] = unpackFromString(1,65538,
 "35:8,1:3,35:2,1,35:18,1,24,35:4,15,35,25,26,19,17,32,18,34,20,30,29:9,35,14" +
 ",23,16,22,35:2,27:4,33,27:21,35:4,31,35,4,9,28,21,3,12,28:2,6,28:2,5,28,7,1" +
 "0,28:2,2,13,8,11,28:5,35:65413,0:2")[0];
 
-	private int yy_rmap[] = unpackFromString(1,59,
-"0,1:2,2,1,3,4,5:2,1:2,6,7,1:2,8,9,1:5,9:3,10,11,9:4,12,5,13,14,11,15,1,16,1" +
-"7,18,19,20,21,22,23,24,25,26,9,27,28,29,30,31,9,32,33,34")[0];
+	private int yy_rmap[] = unpackFromString(1,62,
+"0,1:2,2,1,3,4,5:2,1:2,6,7,1:2,8,9,10,1:5,10:3,11,12,10:4,9,5,13,14,15,16,1," +
+"17,18,19,20,12,21,22,23,24,25,26,27,28,10,29,30,31,32,33,10,34,35,36")[0];
 
-	private int yy_nxt[][] = unpackFromString(35,36,
-"1,2,3,55,45,55,46,47,56,57,33,55,58,55,4,5,6,7,8,9,10,55,11,12,34,13,14,55:" +
-"2,15,37:2,32,55,37:2,-1:38,55,48,55:10,-1:7,55,-1:5,49,55,50:3,-1,49,-1:17," +
-"17,-1:36,18,-1:48,15,-1:22,19,-1:35,20,-1:22,31,-1:25,15:2,-1,31:2,35,-1:3," +
-"55:12,-1:7,55,-1:5,49,55,50:3,-1,49,-1:31,25:2,-1:34,26,35,-1:22,38:2,-1:10" +
-",25,-1:2,38,-1:5,16,55:11,-1:7,55,-1:5,49,55,50:3,-1,49,-1:18,21,-1:21,55:1" +
-"2,-1:7,22,-1:5,49,55,50:3,-1,49,-1:31,25,-1:8,55:6,23,55:5,-1:7,55,-1:5,49," +
-"55,50:3,-1,49,-1:4,55:6,24,55:5,-1:7,55,-1:5,49,55,50:3,-1,49,-1:4,55:3,27," +
-"55:8,-1:7,55,-1:5,49,55,50:3,-1,49,-1:4,55,28,55:10,-1:7,55,-1:5,49,55,50:3" +
-",-1,49,-1:4,55:3,29,55:8,-1:7,55,-1:5,49,55,50:3,-1,49,-1:4,55,30,55:10,-1:" +
-"7,55,-1:5,49,55,50:3,-1,49,-1:4,55:5,36,55:6,-1:7,55,-1:5,49,55,50:3,-1,49," +
-"-1:4,55:5,39,55:6,-1:7,55,-1:5,49,55,50:3,-1,49,-1:4,55:8,40,55:3,-1:7,55,-" +
-"1:5,49,55,50:3,-1,49,-1:4,55:2,41,55:9,-1:7,55,-1:5,49,55,50:3,-1,49,-1:4,5" +
-"0:12,-1:7,50,-1:5,50:5,-1,50,-1:4,55:9,42,55:2,-1:7,55,-1:5,49,55,50:3,-1,4" +
-"9,-1:4,55:8,43,55:3,-1:7,55,-1:5,49,55,50:3,-1,49,-1:4,55:3,54,55:8,-1:7,55" +
-",-1:5,49,55,50:3,-1,49,-1:4,55:11,44,-1:7,55,-1:5,49,55,50:3,-1,49,-1:4,51," +
-"55:11,-1:7,55,-1:5,49,55,50:3,-1,49,-1:4,55:8,52,55:3,-1:7,55,-1:5,49,55,50" +
-":3,-1,49,-1:4,55:2,53,55:9,-1:7,55,-1:5,49,55,50:3,-1,49,-1:2");
+	private int yy_nxt[][] = unpackFromString(37,36,
+"1,2,3,58,48,58,49,50,59,60,34,58,61,58,4,5,6,7,8,9,10,58,11,12,35,13,14,58:" +
+"2,15,16,38,33,58,38:2,-1:38,58,51,58:10,-1:7,58,-1:5,52,58,53:3,-1,52,-1:17" +
+",18,-1:36,19,-1:48,15,32,-1:21,20,-1:35,21,-1:22,36,-1:25,15:2,-1,36:2,39,-" +
+"1:35,39,-1:3,58:12,-1:7,58,-1:5,52,58,53:3,-1,52,-1:31,26:2,-1:34,27,43,-1:" +
+"7,17,58:11,-1:7,58,-1:5,52,58,53:3,-1,52,-1:18,22,-1:36,41:2,-1:10,26,-1:2," +
+"41,-1:5,58:12,-1:7,23,-1:5,52,58,53:3,-1,52,-1:31,27:2,-1:7,58:6,24,58:5,-1" +
+":7,58,-1:5,52,58,53:3,-1,52,-1:31,26,-1:8,58:6,25,58:5,-1:7,58,-1:5,52,58,5" +
+"3:3,-1,52,-1:4,58:3,28,58:8,-1:7,58,-1:5,52,58,53:3,-1,52,-1:4,58,29,58:10," +
+"-1:7,58,-1:5,52,58,53:3,-1,52,-1:4,58:3,30,58:8,-1:7,58,-1:5,52,58,53:3,-1," +
+"52,-1:4,58,31,58:10,-1:7,58,-1:5,52,58,53:3,-1,52,-1:4,58:5,37,58:6,-1:7,58" +
+",-1:5,52,58,53:3,-1,52,-1:4,58:5,40,58:6,-1:7,58,-1:5,52,58,53:3,-1,52,-1:4" +
+",58:8,42,58:3,-1:7,58,-1:5,52,58,53:3,-1,52,-1:4,58:2,44,58:9,-1:7,58,-1:5," +
+"52,58,53:3,-1,52,-1:4,53:12,-1:7,53,-1:5,53:5,-1,53,-1:4,58:9,45,58:2,-1:7," +
+"58,-1:5,52,58,53:3,-1,52,-1:4,58:8,46,58:3,-1:7,58,-1:5,52,58,53:3,-1,52,-1" +
+":4,58:3,57,58:8,-1:7,58,-1:5,52,58,53:3,-1,52,-1:4,58:11,47,-1:7,58,-1:5,52" +
+",58,53:3,-1,52,-1:4,54,58:11,-1:7,58,-1:5,52,58,53:3,-1,52,-1:4,58:8,55,58:" +
+"3,-1:7,58,-1:5,52,58,53:3,-1,52,-1:4,58:2,56,58:9,-1:7,58,-1:5,52,58,53:3,-" +
+"1,52,-1:2");
 
 	public LexicalUnit yylex ()
 		throws java.io.IOException {
@@ -402,43 +406,43 @@ class TinyLexicalAnalyzer {
 					case -16:
 						break;
 					case 16:
-						{return ops.unitOr();}
+						{return ops.unitNumber();}
 					case -17:
 						break;
 					case 17:
-						{return ops.unitEnd();}
+						{return ops.unitOr();}
 					case -18:
 						break;
 					case 18:
-						{return ops.unitEquiv();}
+						{return ops.unitEnd();}
 					case -19:
 						break;
 					case 19:
-						{return ops.unitMayorEqual();}
+						{return ops.unitEquiv();}
 					case -20:
 						break;
 					case 20:
-						{return ops.unitMinorEqual();}
+						{return ops.unitMayorEqual();}
 					case -21:
 						break;
 					case 21:
-						{return ops.unitNonEquiv();}
+						{return ops.unitMinorEqual();}
 					case -22:
 						break;
 					case 22:
-						{return ops.unitAnd();}
+						{return ops.unitNonEquiv();}
 					case -23:
 						break;
 					case 23:
-						{return ops.unitInt();}
+						{return ops.unitAnd();}
 					case -24:
 						break;
 					case 24:
-						{return ops.unitNot();}
+						{return ops.unitInt();}
 					case -25:
 						break;
 					case 25:
-						{return ops.unitNumber();}
+						{return ops.unitNot();}
 					case -26:
 						break;
 					case 26:
@@ -446,120 +450,124 @@ class TinyLexicalAnalyzer {
 					case -27:
 						break;
 					case 27:
-						{return ops.unitReal();}
+						{return ops.unitNumber();}
 					case -28:
 						break;
 					case 28:
-						{return ops.unitTrue();}
+						{return ops.unitReal();}
 					case -29:
 						break;
 					case 29:
-						{return ops.unitBool();}
+						{return ops.unitTrue();}
 					case -30:
 						break;
 					case 30:
-						{return ops.unitFalse();}
+						{return ops.unitBool();}
 					case -31:
 						break;
-					case 32:
-						{}
+					case 31:
+						{return ops.unitFalse();}
 					case -32:
 						break;
 					case 33:
-						{return ops.unitID();}
+						{}
 					case -33:
 						break;
 					case 34:
-						{return ops.unitError(); }
+						{return ops.unitID();}
 					case -34:
 						break;
-					case 36:
-						{return ops.unitID();}
+					case 35:
+						{return ops.unitError(); }
 					case -35:
 						break;
 					case 37:
-						{return ops.unitError(); }
+						{return ops.unitID();}
 					case -36:
 						break;
-					case 39:
-						{return ops.unitID();}
+					case 38:
+						{return ops.unitError(); }
 					case -37:
 						break;
 					case 40:
 						{return ops.unitID();}
 					case -38:
 						break;
-					case 41:
+					case 42:
 						{return ops.unitID();}
 					case -39:
 						break;
-					case 42:
+					case 44:
 						{return ops.unitID();}
 					case -40:
 						break;
-					case 43:
+					case 45:
 						{return ops.unitID();}
 					case -41:
 						break;
-					case 44:
+					case 46:
 						{return ops.unitID();}
 					case -42:
 						break;
-					case 45:
+					case 47:
 						{return ops.unitID();}
 					case -43:
 						break;
-					case 46:
+					case 48:
 						{return ops.unitID();}
 					case -44:
 						break;
-					case 47:
+					case 49:
 						{return ops.unitID();}
 					case -45:
 						break;
-					case 48:
+					case 50:
 						{return ops.unitID();}
 					case -46:
 						break;
-					case 49:
+					case 51:
 						{return ops.unitID();}
 					case -47:
 						break;
-					case 50:
+					case 52:
 						{return ops.unitID();}
 					case -48:
 						break;
-					case 51:
+					case 53:
 						{return ops.unitID();}
 					case -49:
 						break;
-					case 52:
+					case 54:
 						{return ops.unitID();}
 					case -50:
 						break;
-					case 53:
+					case 55:
 						{return ops.unitID();}
 					case -51:
 						break;
-					case 54:
+					case 56:
 						{return ops.unitID();}
 					case -52:
 						break;
-					case 55:
+					case 57:
 						{return ops.unitID();}
 					case -53:
 						break;
-					case 56:
+					case 58:
 						{return ops.unitID();}
 					case -54:
 						break;
-					case 57:
+					case 59:
 						{return ops.unitID();}
 					case -55:
 						break;
-					case 58:
+					case 60:
 						{return ops.unitID();}
 					case -56:
+						break;
+					case 61:
+						{return ops.unitID();}
+					case -57:
 						break;
 					default:
 						yy_error(YY_E_INTERNAL,false);
