@@ -112,4 +112,7 @@ public class ALexOperations {
 		return new UnivaluatedLexicalUnit(_lexa.row(), LexicalClass.ERR);
 	}
 	
+	public LexicalUnit unitEOF() {
+		return new UnivaluatedLexicalUnit(_lexa.row(), LexicalClass.EOF);
+	}
 }
