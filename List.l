@@ -1,5 +1,3 @@
-# java -cp jlex.jar JLex.Main List.l
-
 package jaime;
 
 %%
@@ -15,12 +13,12 @@ package jaime;
 %}
 
 %eofval{
-    System.out.println("Unexpected character at row: " + row() + ", lexeme: " + lexeme() + ".);
-%}
+        return ops.unitEOF();
+%eofval}
 
 %init{
     ops = new ALexOperations(this);
-%}
+%init}
 
 letter      = ([A-Z]|[a-z])
 digPos      = ([1-9])
@@ -43,15 +41,17 @@ equiv       = \=\=
 disequiv    = \!\=
 semicolon   = \;
 end         = \&\&
-eof         = -1
-
-decimalPart = \.{digit}*{digPos}
-exponenPart = [e,E]([+, \-]){integer}
 
 variable    = {letter}+({letter}|{digit}|{lowBar})*
-integer     = {digPos}{digit}*
-real        = ({integer}|0){decimalPart}
-exponential = {real}{exponenPart}
+
+integer     = ([\+,\-])?{digPos}({digit}*)
+decimal     = {integer}{parteDec}
+exponencial = {integer}{parteExp}
+real        = {integer}{parteDec}{parteExp}
+parteDec    = \.({digit})*{digPos}
+parteExp    = [e,E]{integer}
+
+
 
 int = int
 real = real
@@ -61,7 +61,6 @@ false = false
 and = and
 or = or
 not = not
-
 %%
 {separator}         {}
 {real}              {return ops.unitReal();}
@@ -87,10 +86,9 @@ not = not
 {disequiv}          {return ops.unitNonEquiv();}
 {openPar}           {return ops.unitOpenPar();}
 {closePar}          {return ops.unitClosePar();}
-
 {variable}          {return ops.unitID();}
 {real}              {return ops.unitNumber();}
-{exponential}       {return ops.unitNumber();}
 {integer}           {return ops.unitNumber();}
-
-[^]		    {ops.error(); }
+{exponencial}       {return ops.unitNumber();}
+{decimal}           {return ops.unitNumber();}
+[^]                 {return ops.unitError(); }
