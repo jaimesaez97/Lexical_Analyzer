@@ -6,7 +6,7 @@ import java.io.Reader;
 
 public class Main {
 
-    private final int NUM_FILES = 3;
+    private final static int NUM_FILES = 3;
     
 	public static void main(String[] args){
 
@@ -15,13 +15,16 @@ public class Main {
         String inputFile;
         
 		try{
-            while(i <= NUMFILES){
+			System.out.println("=================================================================");
+            System.out.println("=================================================================");
+            while(i <= NUM_FILES){
                 inputFile = "input";
-                inputFile.concat(i);
-                inputFile.concat(".txt");
-            
+                inputFile = inputFile.concat(Integer.toString(i));
+                inputFile = inputFile.concat(".txt");
+
                 input = new InputStreamReader(new FileInputStream(inputFile));
                 
+                System.out.println(" 			FILE " + inputFile);
                 LexicalAnalyzer la;
                 la = new LexicalAnalyzer(input);
                 LexicalUnit unit;
@@ -30,6 +33,9 @@ public class Main {
                     System.out.println(unit);
                 } while(unit.lexClass() != LexicalClass.EOF);
                 
+                System.out.println("=================================================================");
+                System.out.println("=================================================================");
+                System.out.println("\n\n");
                 i += 1;
             }
 				

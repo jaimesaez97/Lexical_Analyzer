@@ -108,7 +108,7 @@ public class LexicalAnalyzer{
                 	if(digit())				nextState(State.REC_NUM);
                 	else if(point())		nextState(State.REC_DEC_NF);
                 	else if(exp())			nextState(State.REC_EXP_NF);
-                	else return unitNumber();
+                	else return unitInteger();
                 	break;
                 case REC_PLUS:
                 	if(posDig())			nextState(State.REC_NUM);
@@ -128,13 +128,13 @@ public class LexicalAnalyzer{
                 case REC_DEC_ZERO:
                 	if(posDig())			nextState(State.REC_DEC);
                 	else if(zero())			nextState(State.REC_DEC_ZERO);
-                	else return unitNumber();
+                	else return unitReal();
                 	break;
                 case REC_DEC:
                 	if(zero())				nextState(State.REC_DEC_NF);
                 	else if(posDig())		nextState(State.REC_DEC);
                 	else if(exp())			nextState(State.REC_EXP_NF);
-                	else return unitNumber();
+                	else return unitReal();
                 	break;
                 case REC_EXP_NF:
                 	if(posDig())			nextState(State.REC_EXP);
@@ -149,13 +149,13 @@ public class LexicalAnalyzer{
                 	break;
                 case REC_EXP:
                 	if(posDig())			nextState(State.REC_EXP);
-                	else return unitNumber();
+                	else return unitReal();
                 	break;
-                case REC_EXP_ZERO:			return unitNumber();
+                case REC_EXP_ZERO:			return unitReal();
                 case REC_ZERO:
                 	if(point())				nextState(State.REC_DEC_NF);
                 	else if(exp())			nextState(State.REC_EXP_NF);
-                	else return unitNumber();
+                	else return unitInteger();
                 	break;
                 case REC_MULT:				return unitMult();
                 case REC_DIV:				return unitDiv();
@@ -296,8 +296,12 @@ public class LexicalAnalyzer{
         }
     }
     
-    private LexicalUnit unitNumber(){
-    	return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.NUM, this._lex.toString());
+    private LexicalUnit unitInteger(){
+    	return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.INT, this._lex.toString());
+    }
+    
+    private LexicalUnit unitReal() {
+    	return new MultivaluatedLexicalUnit(this._initRow, this._initCol, LexicalClass.REAL, this._lex.toString());
     }
     
     private LexicalUnit unitPlus(){
