@@ -12,8 +12,12 @@ public class ALexOperations {
 		return new MultivaluatedLexicalUnit(_lexa.row(), LexicalClass.VAR, _lexa.lexeme());
 	}
 	
-	public LexicalUnit unitNumber() {
-		return new MultivaluatedLexicalUnit(_lexa.row(), LexicalClass.NUM, _lexa.lexeme());
+	public LexicalUnit unitInteger() {
+		return new MultivaluatedLexicalUnit(_lexa.row(), LexicalClass.INT, _lexa.lexeme());
+	}
+	
+	public LexicalUnit unitNumReal() {
+		return new MultivaluatedLexicalUnit(_lexa.row(), LexicalClass.REAL, _lexa.lexeme());
 	}
 	
 	public LexicalUnit unitReal() {
