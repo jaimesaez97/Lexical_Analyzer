@@ -1,0 +1,8 @@
+real indice;
+real exponente;
+real hola;
+real adios
+&&
+indice = (45.07e-12 / 2) * (-0.37 / -12e-12);
+exponente = +0.15;
+adios = -12.5e+14;
