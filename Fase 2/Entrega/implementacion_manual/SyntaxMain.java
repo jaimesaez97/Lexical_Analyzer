@@ -22,7 +22,7 @@ public class SyntaxMain {
             	inputFile = inputFile.concat(Integer.toString(i));
             	inputFile = inputFile.concat(".txt");
 
-            	input = new InputStreamReader(new InputFileStream("inp"));
+            	input = new InputStreamReader(new FileInputStream(inputFile));
 
             	System.out.println(" 			FILE " + inputFile + "\n");
 				

@@ -1,16 +1,16 @@
 import java.io.Reader;
 import java.io.IOException;
 
-public class TinySintaxAnalyzer {
+public class TinySyntaxAnalyzer {
     
     private LexicalUnit preview;
     private TinyLexicalAnalyzer lexa;
     private TinyErrorMgmt error;
     
-    public TinySintaxAnalyzer(Reader input){
+    public TinySyntaxAnalyzer(Reader input){
         error = new TinyErrorMgmt();
-        alex = new TinyLexicalAnalyzer(input);
-        alex.setErrorMgmt(error);
+        lexa = new TinyLexicalAnalyzer(input);
+        lexa.setErrorMgmt(error);
         nextToken();
     }
     
@@ -29,7 +29,7 @@ public class TinySintaxAnalyzer {
                 Si();
                 break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
                 
         }
     }
@@ -43,7 +43,7 @@ public class TinySintaxAnalyzer {
                 DEC();
                 break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
         }
     }
     
@@ -56,7 +56,7 @@ public class TinySintaxAnalyzer {
                 pair(LexicalClass.VAR);
                 break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
         }
     }
     
@@ -72,7 +72,7 @@ public class TinySintaxAnalyzer {
                 pair(LexicalClass.BOOL);
                 break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
         }
     }
     
@@ -86,7 +86,7 @@ public class TinySintaxAnalyzer {
             case END:
                 break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.SEMICOLON);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.SEMICOLON);
         }
     }
     
@@ -96,9 +96,9 @@ public class TinySintaxAnalyzer {
                 I();
                 INS();
                 E0();
-                break();
+                break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.VAR);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.VAR);
         }
     }
 
@@ -110,7 +110,7 @@ public class TinySintaxAnalyzer {
                 E0();
                 break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.VAR);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.VAR);
         }
     }
     
@@ -120,11 +120,11 @@ public class TinySintaxAnalyzer {
                 pair(LexicalClass.SEMICOLON);
                 I();
                 INS();
-                break();
+                break;
             case EOF:
                 break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.SEMICOLON, LexicalClass.EOF);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.SEMICOLON, LexicalClass.EOF);
         }
     }
     
@@ -140,9 +140,9 @@ public class TinySintaxAnalyzer {
             case FALSE:
                 E1();
                 E0_1();
-                break();                
+                break;                
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.MINUS, LexicalClass.NOT, LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE LexicalClass.FALSE);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.MINUS, LexicalClass.NOT, LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
         }
     }
         /* Represents E0' */
@@ -157,30 +157,31 @@ public class TinySintaxAnalyzer {
                 pair(LexicalClass.MINUS);
                 E1();
                 E0_1();
-                break();
+                break;
             case CLPAR:
             case SEMICOLON:
             case EOF:
                 break;                
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.PLUS, LexicalClass.MINUS, LexicalClass.CLPAR, LexicalClass.SEMICOLON, LexicalClass.EOF);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.PLUS, LexicalClass.MINUS, LexicalClass.CLPAR, LexicalClass.SEMICOLON, LexicalClass.EOF);
         }
     }
     
     private void E1(){
         switch (preview.lexClass()){
-            case MENOS:
+            case MINUS:
             case NOT:
-            case PAB:
-            case IDEN:
-            case NUMERO:
+            case OPPAR:
+            case VAR:
+            case INT:
+            case REAL:
             case TRUE:
             case FALSE:
                 E2();
-                RE1();
+                E1_1();
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.MENOS, LexicalClass.NOT, LexicalClass.PAB, LexicalClass.IDEN, LexicalClass.NUMERO, LexicalClass.TRUE, LexicalClass.FALSE);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.MINUS, LexicalClass.NOT, LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
         }
     }
         /* Represents EE1 */
@@ -193,7 +194,7 @@ public class TinySintaxAnalyzer {
             case OR:
                 pair(LexicalClass.OR);
                 E2();
-                break();
+                break;
             case PLUS:
             case MINUS:
             case CLPAR:
@@ -201,7 +202,7 @@ public class TinySintaxAnalyzer {
             case EOF:
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.AND, LexicalClass.OR);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.AND, LexicalClass.OR);
         }
     }
 
@@ -219,7 +220,7 @@ public class TinySintaxAnalyzer {
                 E2_1();
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.AND, LexicalClass.OR);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.AND, LexicalClass.OR);
         }
     }
         /* Represents EE2 */
@@ -243,7 +244,7 @@ public class TinySintaxAnalyzer {
             case EOF:
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.MINOR, LexicalClass.MAYOR, LexicalClass.LEQUAL , LexicalClass.MEQUAL , LexicalClass.EQUIV, LexicalClass.NONEQUIV);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.MINOR, LexicalClass.MAYOR, LexicalClass.LEQUAL , LexicalClass.MEQUAL , LexicalClass.EQUIV, LexicalClass.NONEQUIV);
 
         }
     }
@@ -262,7 +263,7 @@ public class TinySintaxAnalyzer {
                 E3_1();
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.MINOR, LexicalClass.MAYOR, LexicalClass.LEQUAL , LexicalClass.MEQUAL , LexicalClass.EQUIV, LexicalClass.NONEQUIV);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.MINOR, LexicalClass.MAYOR, LexicalClass.LEQUAL , LexicalClass.MEQUAL , LexicalClass.EQUIV, LexicalClass.NONEQUIV);
 
         }
     }
@@ -301,7 +302,7 @@ public class TinySintaxAnalyzer {
             case FALSE:
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.POR, LexicalClass.DIV);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.MULT, LexicalClass.DIV);
         }
     }
 
@@ -324,7 +325,7 @@ public class TinySintaxAnalyzer {
                 E5();
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.MINUS, LexicalClass.NOT, LexicalClass.OPPAR , LexicalClass.VAR , LexicalClass.INT, LexicalClass.REAL, LexicalCLass.TRUE, LexicalCLass.FALSE);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.MINUS, LexicalClass.NOT, LexicalClass.OPPAR , LexicalClass.VAR , LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
         }
     }
 
@@ -351,7 +352,7 @@ public class TinySintaxAnalyzer {
                 pair(LexicalClass.FALSE);
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
         }
     }
 
@@ -376,7 +377,7 @@ public class TinySintaxAnalyzer {
                 pair(LexicalClass.NONEQUIV);
                 break;
             default:
-                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
+                error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
         }
     }
 
@@ -384,7 +385,7 @@ public class TinySintaxAnalyzer {
         if(preview.lexClass() == expectedClass)
             nextToken();
         else
-            error.sintaxError(preview.row(), preview.lexClass(), expectedClass);
+            error.syntaxError(preview.row(), preview.lexClass(), expectedClass);
     }
 
     private void nextToken(){

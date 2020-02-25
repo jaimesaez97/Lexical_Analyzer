@@ -9,8 +9,13 @@ class TinyLexicalAnalyzer {
 	private final int YY_EOF = 65537;
 
     private ALexOperations ops;
+    private TinyErrorMgmt error;
     public String lexeme()      { return yytext();}
     public int row()            { return yyline+1;}
+    public void setErrorMgmt(TinyErrorMgmt error) {
+    	this.error = error;
+    }
+    
 	private java.io.BufferedReader yy_reader;
 	private int yy_buffer_index;
 	private int yy_buffer_read;

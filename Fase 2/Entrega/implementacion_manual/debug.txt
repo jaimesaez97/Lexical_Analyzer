@@ -1,0 +1,8 @@
+DEBUG:
+	- Ahora mismo se queda pillado al final de E4.
+	- Acepta unas clases y ninguna de esas es EOF
+		- El error tiene que venir de atrás, en el wrapper de E4 debería haber algo así:
+			...
+			E4()
+			...
+		- Y esta función tiene que aceptar EOF.
