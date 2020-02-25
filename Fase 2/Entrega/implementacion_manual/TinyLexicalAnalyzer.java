@@ -1,6 +1,3 @@
-package jaime;
-
-
 class TinyLexicalAnalyzer {
 	private final int YY_BUFFER_SIZE = 512;
 	private final int YY_F = -1;

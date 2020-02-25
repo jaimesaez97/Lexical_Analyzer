@@ -6,14 +6,15 @@ import java.io.Reader;
 
 public class Main {
 
-    private final static int NUM_FILES = 3;
-    
+	
+	private final static int NUM_FILES = 3;
+	
 	public static void main(String[] args){
 
 		Reader input;
-        int i = 1;
-        String inputFile;
-        
+		String inputFile;
+		int i = 1;
+
 		try{
 			System.out.println("=================================================================");
             System.out.println("=================================================================");
@@ -24,21 +25,20 @@ public class Main {
 
                 input = new InputStreamReader(new FileInputStream(inputFile));
                 
-                System.out.println(" 			FILE " + inputFile);
-                LexicalAnalyzer la;
-                la = new LexicalAnalyzer(input);
+                System.out.println(" 			FILE " + inputFile + "\n");
+                TinyLexicalAnalyzer la;
+                la = new TinyLexicalAnalyzer(input);
                 LexicalUnit unit;
                 do{
-                    unit = la.nextToken();
+                    unit = la.yylex();
                     System.out.println(unit);
                 } while(unit.lexClass() != LexicalClass.EOF);
                 
-                System.out.println("=================================================================");
+                System.out.println("\n=================================================================");
                 System.out.println("=================================================================");
                 System.out.println("\n\n");
                 i += 1;
             }
-				
 		} catch(FileNotFoundException e){
 			e.printStackTrace();
 		} catch(IOException e){

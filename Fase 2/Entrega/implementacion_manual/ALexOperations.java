@@ -1,5 +1,3 @@
-package jaime;
-
 public class ALexOperations {
 	
 	private TinyLexicalAnalyzer _lexa;

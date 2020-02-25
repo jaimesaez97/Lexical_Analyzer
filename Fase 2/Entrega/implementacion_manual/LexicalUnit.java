@@ -2,11 +2,9 @@ public abstract class LexicalUnit{
     
     private LexicalClass _class;
     private int _row;
-    private int _col;
     
-    public LexicalUnit(int row, int col, LexicalClass lexClass){
+    public LexicalUnit(int row, LexicalClass lexClass){
         this._row = row;
-        this._col = col;
         this._class = lexClass;
     }
     
@@ -18,9 +16,5 @@ public abstract class LexicalUnit{
     
     public int row(){
         return this._row;
-    }
-    
-    public int col(){
-        return this._col;
     }
 }

@@ -1,5 +1,3 @@
-package jaime;
-
 %%
 %line
 %class TinyLexicalAnalyzer

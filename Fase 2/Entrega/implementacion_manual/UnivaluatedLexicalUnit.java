@@ -5,12 +5,12 @@ public class UnivaluatedLexicalUnit extends LexicalUnit {
         throw new Exception();
     }
     
-    public UnivaluatedLexicalUnit (int row, int col, LexicalClass lexClass){
-        super(row, col, lexClass);
+    public UnivaluatedLexicalUnit (int row, LexicalClass lexClass){
+        super(row, lexClass);
     }
     
 
 	public String toString(){
-        return "[Class: " + lexClass() + ", row: " + row() + ", col: " + col() + "]";
+        return "[Class: " + lexClass() + ", row: " + row() + "]";
     }    
 }
