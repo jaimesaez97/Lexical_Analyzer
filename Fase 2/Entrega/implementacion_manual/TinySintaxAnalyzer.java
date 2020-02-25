@@ -86,17 +86,29 @@ public class TinySintaxAnalyzer {
             case END:
                 break;
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.SEMICOLON, LexicalClass.END);
+                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.SEMICOLON);
         }
     }
     
     private void Si(){
         switch(preview.lexClass()){
             case VAR:
+                I();
+                INS();
+                E0();
+                break();
+            default:
+                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.VAR);
+        }
+    }
+
+    private void I(){
+        switch(preview.lexClass()){
+            case VAR:
                 pair(LexicalClass.VAR);
                 pair(LexicalClass.EQUAL);
                 E0();
-                break();
+                break;
             default:
                 error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.VAR);
         }
@@ -151,12 +163,12 @@ public class TinySintaxAnalyzer {
             case EOF:
                 break;                
             default:
-                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.PLUS, LexicalClass.MINUS, LexicalClass.PCE, LexicalClass.SEMICOLON, LexicalClass.EOF);
+                error.sintaxError(preview.row(), preview.lexClass(), LexicalClass.PLUS, LexicalClass.MINUS, LexicalClass.CLPAR, LexicalClass.SEMICOLON, LexicalClass.EOF);
         }
     }
     
     private void E1(){
-        switch (anticipo.clase()) {
+        switch (preview.lexClass()){
             case MENOS:
             case NOT:
             case PAB:
@@ -168,7 +180,218 @@ public class TinySintaxAnalyzer {
                 RE1();
                 break;
             default:
-                errores.errorSintactico(anticipo.fila(), anticipo.clase(), ClaseLexica.MENOS, ClaseLexica.NOT, ClaseLexica.PAB, ClaseLexica.IDEN, ClaseLexica.NUMERO, ClaseLexica.TRUE, ClaseLexica.FALSE);
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.MENOS, LexicalClass.NOT, LexicalClass.PAB, LexicalClass.IDEN, LexicalClass.NUMERO, LexicalClass.TRUE, LexicalClass.FALSE);
+        }
+    }
+        /* Represents EE1 */
+    private void E1_1(){
+        switch (preview.lexClass()) {
+            case AND:
+                pair(LexicalClass.AND);
+                E1();
+                break;
+            case OR:
+                pair(LexicalClass.OR);
+                E2();
+                break();
+            case PLUS:
+            case MINUS:
+            case CLPAR:
+            case SEMICOLON:
+            case EOF:
+                break;
+            default:
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.AND, LexicalClass.OR);
+        }
+    }
+
+    private void E2(){
+        switch(preview.lexClass()){
+            case MINUS:
+            case NOT:
+            case OPPAR:
+            case VAR:
+            case INT:
+            case REAL:
+            case TRUE:
+            case FALSE:
+                E3();
+                E2_1();
+                break;
+            default:
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.AND, LexicalClass.OR);
+        }
+    }
+        /* Represents EE2 */
+    private void E2_1(){
+        switch(preview.lexClass()){
+            case MINOR:
+            case MAYOR:
+            case LEQUAL:
+            case MEQUAL:
+            case EQUIV:
+            case NONEQUIV:
+                OP();
+                E3();
+                break;
+            case AND:
+            case OR:
+            case PLUS:
+            case MINUS:
+            case CLPAR:
+            case SEMICOLON:
+            case EOF:
+                break;
+            default:
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.MINOR, LexicalClass.MAYOR, LexicalClass.LEQUAL , LexicalClass.MEQUAL , LexicalClass.EQUIV, LexicalClass.NONEQUIV);
+
+        }
+    }
+
+    private void E3(){
+        switch(preview.lexClass()){
+            case MINUS:
+            case NOT:
+            case OPPAR:
+            case VAR:
+            case INT:
+            case REAL:
+            case TRUE:
+            case FALSE:
+                E4();
+                E3_1();
+                break;
+            default:
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.MINOR, LexicalClass.MAYOR, LexicalClass.LEQUAL , LexicalClass.MEQUAL , LexicalClass.EQUIV, LexicalClass.NONEQUIV);
+
+        }
+    }
+        /* Represents E3' */
+    private void E3_1(){
+        switch(preview.lexClass()){
+            case MULT:
+                pair(LexicalClass.MULT);
+                E4();
+                E3_1();
+                break;
+            case DIV:
+                pair(LexicalClass.DIV);
+                E4();
+                E3_1();
+                break;
+            case MINOR:
+            case MAYOR:
+            case LEQUAL:
+            case MEQUAL:
+            case EQUIV:
+            case NONEQUIV:
+            case AND:
+            case OR:
+            case PLUS:
+            case MINUS:
+            case CLPAR:
+            case SEMICOLON:
+            case EOF:
+            case NOT:
+            case OPPAR:
+            case VAR:
+            case INT:
+            case REAL:
+            case TRUE:
+            case FALSE:
+                break;
+            default:
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.POR, LexicalClass.DIV);
+        }
+    }
+
+    private void E4(){
+        switch(preview.lexClass()){
+            case MINUS:
+                pair(LexicalClass.MINUS);
+                E4();
+                break;
+            case NOT:
+                pair(LexicalClass.NOT);
+                E5();
+                break;
+            case OPPAR:
+            case VAR:
+            case INT:
+            case REAL:
+            case TRUE:
+            case FALSE:
+                E5();
+                break;
+            default:
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.MINUS, LexicalClass.NOT, LexicalClass.OPPAR , LexicalClass.VAR , LexicalClass.INT, LexicalClass.REAL, LexicalCLass.TRUE, LexicalCLass.FALSE);
+        }
+    }
+
+    private void E5(){
+        switch(preview.lexClass()){
+            case OPPAR:
+                pair(LexicalClass.OPPAR);
+                E0();
+                pair(LexicalClass.CLPAR);
+                break;
+            case VAR:
+                pair(LexicalClass.VAR);
+                break;
+            case INT:
+                pair(LexicalClass.INT);
+                break;
+            case REAL:
+                pair(LexicalClass.REAL);
+                break;
+            case TRUE:
+                pair(LexicalClass.TRUE);
+                break;
+            case FALSE:
+                pair(LexicalClass.FALSE);
+                break;
+            default:
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
+        }
+    }
+
+    private void OP(){
+        switch(preview.lexClass()){
+            case MINOR:
+                pair(LexicalClass.MINOR);
+                break;
+            case MAYOR:
+                pair(LexicalClass.MAYOR);
+                break;
+            case LEQUAL:
+                pair(LexicalClass.LEQUAL);
+                break;
+            case MEQUAL:
+                pair(LexicalClass.MEQUAL);
+                break;
+            case EQUIV:
+                pair(LexicalClass.EQUIV);
+                break;
+            case NONEQUIV:
+                pair(LexicalClass.NONEQUIV);
+                break;
+            default:
+                error.sintaxError(anticipo.row(), preview.lexClass(), LexicalClass.OPPAR, LexicalClass.VAR, LexicalClass.INT, LexicalClass.REAL, LexicalClass.TRUE, LexicalClass.FALSE);
+        }
+    }
+
+    private void pair(LexicalClass expectedClass){
+        if(preview.lexClass() == expectedClass)
+            nextToken();
+        else
+            error.sintaxError(preview.row(), preview.lexClass(), expectedClass);
+    }
+
+    private void nextToken(){
+        try{
+            preview = lexa.yylex();
+        } catch(IOException e){
+            error.fatalError(e);
         }
     }
 }
