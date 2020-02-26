@@ -29,7 +29,7 @@ OP \longrightarrow\ <\ |\ >\ |\ <=\ |\ >=\ |\ ==\ |\ !=\\
 \subsubsection{Eliminación de recursión por la izquierda}
 
 $$G = (V_N, V_T, P, S)$$
-$$V_N = \{S, Ds, D, T, Is, I, E0, E0', E1, E2, E3, E3', E4, E5, OP\}$$
+$$V_N = \{S, Ds, D, T, Is, I, E0, E1, E1', E2, E2', E3, E4, E5, OP\}$$
 $$V_F = \{+, -, and, or, >, <, >=, <=, ==, !=, *, /, not, \underline{(}, \underline{)}, identificador, true, false\}$$
 \begin{equation*}P =\left\{
 \begin{array}{@{}ll@{}}
@@ -42,13 +42,13 @@ T \longrightarrow\ num\ |\ bool\\
 Is \longrightarrow\ I\ |\ I;\ Is\\
 I \longrightarrow\ identificador\ =\ E0\\
 \\
-E0 \longrightarrow\ E1\ E0'\\
-E0' \longrightarrow\ +\ E1\ E0'\ |\ -\ E1\ E0'\ |\ \epsilon\\
-E1 \longrightarrow\ E2\ \text{and}\ E1\ |\ E2\ \text{or}\ E2\ |\ E2\\
-E2 \longrightarrow\ E3\ OP\ E3\ |\ E3\\
-E3 \longrightarrow\ E4\ E3'\\
-E3' \longrightarrow\ *\ E4\ E3\ |\ /\ E4\ E3\ |\ \epsilon\\
-E4 \longrightarrow\ -E4\ |\ \text{not}\ E5\ |\ E5\\
+E0 \longrightarrow\ E1 + E0\ |\ E1 - E1\ |\ E1\\
+E1 \longrightarrow\ E2\ E1'\\
+E1' \longrightarrow\ \text{and}\ E2\ E1'\ |\ \text{or}\ E2\ E1'\ |\ \epsilon \\
+E2 \longrightarrow\ E3\ E2'\\
+E2' \longrightarrow\ OP\ E3\ E2'\ |\ \epsilon \\
+E3 \longrightarrow\ E4 * E4\ |\ E4 / E4\ |\ E4\\
+E4 \longrightarrow\ -E5\ |\ \text{not}\ E4\ |\ E5\\
 E5 \longrightarrow\ (E0)\ |\ identificador\ |\ numReal\ |\ \text{true}\ |\ \text{false}\\
 \\
 OP \longrightarrow\ <\ |\ >\ |\ <=\ |\ >=\ |\ ==\ |\ !=\\
@@ -60,7 +60,7 @@ OP \longrightarrow\ <\ |\ >\ |\ <=\ |\ >=\ |\ ==\ |\ !=\\
 \subsubsection{Eliminación de factores a la izquierda}
 
 $$G = (V_N, V_T, P, S)$$
-$$V_N = \{S, Ds, D, T, Is, I, E0, E0', E1, FE1, E2, FE2, E3, E3', E4, E5, OP\}$$
+$$V_N = \{S, Ds, D, T, Is, I, E0, FE0, E1, E1', E2, E2', E3, FE3, E4, E5, OP\}$$
 $$V_F = \{+, -, and, or, >, <, >=, <=, ==, !=, *, /, not, \underline{(}, \underline{)}, identificador, true, false\}$$
 \begin{equation*}P =\left\{
 \begin{array}{@{}ll@{}}
@@ -75,15 +75,15 @@ Is \longrightarrow\ I\ FI\\
 I \longrightarrow\ identificador\ =\ E0\\
 FI \longrightarrow\ \epsilon\ |\ ;\ I\ FI\\
 \\
-E0 \longrightarrow\ E1\ E0'\\
-E0' \longrightarrow\ +\ E1\ E0'\ |\ -\ E1\ E0'\ |\ \epsilon\\
-E1 \longrightarrow\ E2\ FE1\\
-FE1 \longrightarrow\ \text{and}\ E1\ |\ \text{or}\ E2\ |\ \epsilon\\
-E2 \longrightarrow\ E3\ FE2\\
-FE2 \longrightarrow\ OP\ E3\ |\ \epsilon\\
-E3 \longrightarrow\ E4\ E3'\\
-E3' \longrightarrow\ *\ E4\ E3\ |\ /\ E4\ E3\ |\ \epsilon\\
-E4 \longrightarrow\ -E4\ |\ \text{not}\ E5\ |\ E5\\
+E0 \longrightarrow\ E1\ FE0\\
+FE0 \longrightarrow\ +\ E0\ |\ -\ E1\ |\ \epsilon\\
+E1 \longrightarrow\ E2\ E1'\\
+E1' \longrightarrow\ \text{and}\ E2\ E1'\ |\ \text{or}\ E2\ E1'\ |\ \epsilon \\
+E2 \longrightarrow\ E3\ E2'\\
+E2' \longrightarrow\ OP\ E3\ E2'\ |\ \epsilon \\
+E3 \longrightarrow\ E4 \ FE3\\
+FE3 \longrightarrow\ *E4 \ |\ /E4 \ | \ \epsilon\\
+E4 \longrightarrow\ -E5\ |\ \text{not}\ E4\ |\ E5\\
 E5 \longrightarrow\ (E0)\ |\ identificador\ |\ numReal\ |\ \text{true}\ |\ \text{false}\\
 \\
 OP \longrightarrow\ <\ |\ >\ |\ <=\ |\ >=\ |\ ==\ |\ != \\
