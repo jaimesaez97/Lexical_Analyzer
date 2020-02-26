@@ -1,0 +1,168 @@
+$$G = (V_N, V_T, P, S)$$
+$$V_N = \{S, Ds, D, T, Is, I, E0, E1, E2, E3, E4, E5, OP\}$$
+$$V_F = \{+, -, and, or, >, <, >=, <=, ==, !=, *, /, not, \underline{(}, \underline{)}, identificador, true, false\}$$
+\begin{equation*}P =\left\{
+\begin{array}{@{}ll@{}}
+S \longrightarrow\ Ds\ \&\&\ Is\\
+\\
+Ds \longrightarrow\ D\ |\ D;\ Ds\\
+D \longrightarrow\ T\ identificador\\
+T \longrightarrow\ num\ |\ bool\\
+\\
+Is \longrightarrow\ I\ |\ I;\ Is\\
+I \longrightarrow\ identificador\ =\ E0\\
+\\
+E0 \longrightarrow\ E1 + E0\ |\ E1 - E1\ |\ E1\\
+E1 \longrightarrow\ E1\ \text{and}\ E2\ |\ E1\ \text{or}\ E2\ |\ E2\\
+E2 \longrightarrow\ E2\ OP\ E3\ |\ E3\\
+E3 \longrightarrow\ E4 * E4\ |\ E4 / E4\ |\ E4\\
+E4 \longrightarrow\ -E5\ |\ \text{not}\ E4\ |\ E5\\
+E5 \longrightarrow\ (E0)\ |\ identificador\ |\ numReal\ |\ \text{true}\ |\ \text{false}\\
+\\
+OP \longrightarrow\ <\ |\ >\ |\ <=\ |\ >=\ |\ ==\ |\ !=\\
+\end{array}
+\right .
+\end{equation*}
+
+\newpage
+\subsection{Acondicionamiento para LL(1)}
+\subsubsection{Eliminación de recursión por la izquierda}
+
+$$G = (V_N, V_T, P, S)$$
+$$V_N = \{S, Ds, D, T, Is, I, E0, E0', E1, E2, E3, E3', E4, E5, OP\}$$
+$$V_F = \{+, -, and, or, >, <, >=, <=, ==, !=, *, /, not, \underline{(}, \underline{)}, identificador, true, false\}$$
+\begin{equation*}P =\left\{
+\begin{array}{@{}ll@{}}
+S \longrightarrow\ Ds\ \&\&\ Is\\
+\\
+Ds \longrightarrow\ D\ |\ D;\ Ds\\
+D \longrightarrow\ T\ identificador\\
+T \longrightarrow\ num\ |\ bool\\
+\\
+Is \longrightarrow\ I\ |\ I;\ Is\\
+I \longrightarrow\ identificador\ =\ E0\\
+\\
+E0 \longrightarrow\ E1\ E0'\\
+E0' \longrightarrow\ +\ E1\ E0'\ |\ -\ E1\ E0'\ |\ \epsilon\\
+E1 \longrightarrow\ E2\ \text{and}\ E1\ |\ E2\ \text{or}\ E2\ |\ E2\\
+E2 \longrightarrow\ E3\ OP\ E3\ |\ E3\\
+E3 \longrightarrow\ E4\ E3'\\
+E3' \longrightarrow\ *\ E4\ E3\ |\ /\ E4\ E3\ |\ \epsilon\\
+E4 \longrightarrow\ -E4\ |\ \text{not}\ E5\ |\ E5\\
+E5 \longrightarrow\ (E0)\ |\ identificador\ |\ numReal\ |\ \text{true}\ |\ \text{false}\\
+\\
+OP \longrightarrow\ <\ |\ >\ |\ <=\ |\ >=\ |\ ==\ |\ !=\\
+\end{array}
+\right .
+\end{equation*}
+
+\newpage
+\subsubsection{Eliminación de factores a la izquierda}
+
+$$G = (V_N, V_T, P, S)$$
+$$V_N = \{S, Ds, D, T, Is, I, E0, E0', E1, FE1, E2, FE2, E3, E3', E4, E5, OP\}$$
+$$V_F = \{+, -, and, or, >, <, >=, <=, ==, !=, *, /, not, \underline{(}, \underline{)}, identificador, true, false\}$$
+\begin{equation*}P =\left\{
+\begin{array}{@{}ll@{}}
+S \longrightarrow\ Ds\ \&\&\ Is\\
+\\
+Ds \longrightarrow\ D\ FD\\
+D \longrightarrow\ T\ identificador\\
+FD \longrightarrow\ \epsilon\ |\ ;\ D\ FD\\
+T \longrightarrow\ num\ |\ bool\\
+\\
+Is \longrightarrow\ I\ FI\\
+I \longrightarrow\ identificador\ =\ E0\\
+FI \longrightarrow\ \epsilon\ |\ ;\ I\ FI\\
+\\
+E0 \longrightarrow\ E1\ E0'\\
+E0' \longrightarrow\ +\ E1\ E0'\ |\ -\ E1\ E0'\ |\ \epsilon\\
+E1 \longrightarrow\ E2\ FE1\\
+FE1 \longrightarrow\ \text{and}\ E1\ |\ \text{or}\ E2\ |\ \epsilon\\
+E2 \longrightarrow\ E3\ FE2\\
+FE2 \longrightarrow\ OP\ E3\ |\ \epsilon\\
+E3 \longrightarrow\ E4\ E3'\\
+E3' \longrightarrow\ *\ E4\ E3\ |\ /\ E4\ E3\ |\ \epsilon\\
+E4 \longrightarrow\ -E4\ |\ \text{not}\ E5\ |\ E5\\
+E5 \longrightarrow\ (E0)\ |\ identificador\ |\ numReal\ |\ \text{true}\ |\ \text{false}\\
+\\
+OP \longrightarrow\ <\ |\ >\ |\ <=\ |\ >=\ |\ ==\ |\ != \\
+\end{array}
+\right .
+\end{equation*}
+
+\newpage
+\subsection{Primeros, siguientes y directores}
+
+\begin{tabular}{ |p{2cm}||p{5cm}|p{5cm}|p{0cm}|  }
+    \hline
+    Productor & Primeros & Siguientes & \\
+    \hline
+    S & num, bool & $\oslash$ & \\
+    D & num, bool & ;, \&\& & \\
+    FD & ; & \&\& & \\
+    Ds & num, bool & \&\& & \\
+    T & num, bool & identificador & \\
+    I & identificador & ; & \\
+    FI & ; & $\oslash$ & \\
+    Is & identificador & $\oslash$ & \\
+    E0' & +, - & ), ; & \\
+    FE1 & and, or  & ), +, -, ; & \\
+    E1 & -, not, (, identificador, numReal, true, false & ), +, -, ; & \\
+    E2 & -, not, (, identificador, numReal, true, false & ), and, or, +, -, ; & \\
+    FE2 & $<$, $>$, $<=$, $>=$, ==, != & ), and, or, +, -, ; & \\
+    E3 & -, not, (, identificador, numReal, true, false & ), $<$, $>$, $<=$, $>=$, ==, !=, and, or, +, -, ; & \\
+    E3' & *, / & ), $<$, $>$, $<=$, $>=$, ==, !=, and, or, +, -, ; & \\
+    E4 & -, not, (, identificador, numReal, true, false & ), *, /, $<$, $>$, $<=$, $>=$, ==, !=, and, or, +, -, ; & \\
+    E5 & (, identificador, numReal, true, false & ), *, /, $<$, $>$, $<=$, $>=$, ==, !=, and, or, +, -, ; & \\
+    E0 & -, not, (, identificador, numReal, true, false & ), ; & \\
+    OP & $<$, $>$, $<=$, $>=$, ==, != & -, not, (, identificador, numReal, true, false & \\
+    \hline
+\end{tabular}
+
+\begin{tabular}{ |p{5cm}||p{8cm}| }
+ \hline
+ Productor & Directores \\
+ \hline
+ S   $\longrightarrow$\ Ds\ \&\&\ Is\ & num, bool \\
+ Ds  $\longrightarrow$\ D\ FD\ & num, bool \\
+ D   $\longrightarrow$\ T\ identificador\ & num, bool \\
+ FD  $\longrightarrow$\ epsilon\ & \&\& \\
+ FD  $\longrightarrow$\ ;\ D\ FD\ & ; \\
+ T   $\longrightarrow$\ num\ & num \\
+ T   $\longrightarrow$\ bool\ & bool \\
+ Is  $\longrightarrow$\ I\ FI\ & identificador \\
+ I   $\longrightarrow$\ identificador\ =\ E0\ & identificador \\
+ FI  $\longrightarrow$\ epsilon\ & - \\
+ FI  $\longrightarrow$\ ;\ I\ FI\ & ; \\
+ E0  $\longrightarrow$\ E1\ E0'\ & -, not, (, identificador, numReal, true, false \\
+ E0' $\longrightarrow$\ +\ E1\ E0'\ & + \\
+ E0' $\longrightarrow$\ -\ E1\ E0'\ & - \\
+ E0' $\longrightarrow$\ epsilon\ & ), -, ; \\
+ E1  $\longrightarrow$\ E2\ FE1\ & -, not, (, identificador, numReal, true, false \\
+ FE1 $\longrightarrow$\ and\ E1\ & and \\
+ FE1 $\longrightarrow$\ or\ E2\ & or \\
+ FE1 $\longrightarrow$\ epsilon\ & +, -, ), -, ; \\
+ E2  $\longrightarrow$\ E3\ FE2\ & -, not, (, identificador, numReal, true, false \\
+ FE2 $\longrightarrow$\ OP\ E3\ & $<$, $>$, $<$=, $>$=, ==, != \\
+ FE2 $\longrightarrow$\ epsilon\ & and, or, +, -, ), -, ; \\
+ E3  $\longrightarrow$\ E4\ E3'\ & -, not, (, identificador, numReal, true, false \\
+ E3' $\longrightarrow$\ *\ E4\ E3'\ & * \\
+ E3' $\longrightarrow$\ /\ E4\ E3'\ & / \\
+ E3' $\longrightarrow$\ epsilon\ & $<$, $>$, $<$=, $>$=, ==, !=, and, or, +, -, ), -, ;, not, (, identificador, numReal, true, false \\
+ E4  $\longrightarrow$\ -\ E4\ & - \\
+ E4  $\longrightarrow$\ not\ E5\ & not \\
+ E4  $\longrightarrow$\ E5\ & (, identificador, numReal, true, false \\
+ E5  $\longrightarrow$\ (E0) & ( \\
+ E5  $\longrightarrow$\ identificador & identificador \\
+ E5  $\longrightarrow$\ numReal & numReal \\
+ E5  $\longrightarrow$\ true & true \\
+ E5  $\longrightarrow$\ false & false \\
+ OP  $\longrightarrow$\ $<$ & $<$ \\
+ OP  $\longrightarrow$\ $>$ & $>$ \\
+ OP  $\longrightarrow$\ $<$= & $<$= \\
+ OP  $\longrightarrow$\ $>$= & $>$= \\
+ OP  $\longrightarrow$\ == & == \\
+ OP  $\longrightarrow$\ != & != \\
+ \hline
+\end{tabular}
