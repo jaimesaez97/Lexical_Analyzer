@@ -1,4 +1,11 @@
+package synt;
 import java.io.Reader;
+
+import err.TinyErrorMgmt;
+import lex.LexicalClass;
+import lex.LexicalUnit;
+import lex.TinyLexicalAnalyzer;
+
 import java.io.IOException;
 
 public class TinySyntaxAnalyzer {
@@ -75,7 +82,7 @@ public class TinySyntaxAnalyzer {
                 error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.INT, LexicalClass.REAL, LexicalClass.BOOL);
         }
     }
-    
+
     private void DEC(){
         switch(preview.lexClass()){
             case SEMICOLON:
@@ -95,7 +102,6 @@ public class TinySyntaxAnalyzer {
             case VAR:
                 I();
                 INS();
-                E0();
                 break;
             default:
                 error.syntaxError(preview.row(), preview.lexClass(), LexicalClass.VAR);

@@ -1,3 +1,4 @@
+package lex;
 public abstract class LexicalUnit{
     
     private LexicalClass _class;

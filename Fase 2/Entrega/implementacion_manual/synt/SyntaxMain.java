@@ -1,3 +1,4 @@
+package synt;
 
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -28,6 +29,8 @@ public class SyntaxMain {
 				
 				TinySyntaxAnalyzer syna = new TinySyntaxAnalyzer(input);
 				syna.Sp();
+				
+				System.out.println("\n 			CORRECT SYNTAX!!\n");
 
                 System.out.println("\n=================================================================");
                 System.out.println("=================================================================");

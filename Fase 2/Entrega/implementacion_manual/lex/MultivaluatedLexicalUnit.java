@@ -1,3 +1,4 @@
+package lex;
 public class MultivaluatedLexicalUnit extends LexicalUnit {
     
     private String _lexeme;

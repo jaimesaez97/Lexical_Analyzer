@@ -1,4 +1,8 @@
-class TinyLexicalAnalyzer {
+package lex;
+
+import err.TinyErrorMgmt;
+
+public class TinyLexicalAnalyzer {
 	private final int YY_BUFFER_SIZE = 512;
 	private final int YY_F = -1;
 	private final int YY_NO_STATE = -1;
@@ -26,7 +30,7 @@ class TinyLexicalAnalyzer {
 	private boolean yy_at_bol;
 	private int yy_lexical_state;
 
-	TinyLexicalAnalyzer (java.io.Reader reader) {
+	public TinyLexicalAnalyzer (java.io.Reader reader) {
 		this ();
 		if (null == reader) {
 			throw (new Error("Error: Bad input stream initializer."));

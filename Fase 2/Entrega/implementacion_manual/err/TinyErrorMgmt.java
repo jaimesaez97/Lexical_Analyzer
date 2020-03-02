@@ -1,3 +1,6 @@
+package err;
+import lex.LexicalClass;
+
 public class TinyErrorMgmt {
 
 	public void lexicalError(int row, String lexeme) {

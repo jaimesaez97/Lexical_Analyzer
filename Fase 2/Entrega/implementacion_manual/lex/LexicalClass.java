@@ -1,3 +1,4 @@
+package lex;
 /*
 SEMICOLON: ;
 OPPAR: (

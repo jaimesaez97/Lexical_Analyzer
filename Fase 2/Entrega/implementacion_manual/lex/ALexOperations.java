@@ -1,3 +1,5 @@
+package lex;
+
 public class ALexOperations {
 	
 	private TinyLexicalAnalyzer _lexa;
