@@ -1,0 +1,55 @@
+options {
+	STATIC=false;
+}
+PARSER_BEGIN(TinySyntaxAnalyzer)
+package synt;
+
+public class TinySyntaxAnalyzer {}
+PARSER_END(TinySyntaxAnalyzer)
+	TOKEN:{<#letter:["a"-"z","A"-"Z"]>}
+	TOKEN:{<#pos_digit:["1"-"9"]>}
+	TOKEN:{<#digit:<pos_digit> | "0">}
+
+	TOKEN:{<#integer: (["+","-"])?(<pos_digit>)(<digit>)*>}
+
+	TOKEN:{<#parte_dec: "."((<digit>)*(<pos_digit>)|"0")>}
+	TOKEN:{<#parte_exp: ("e"|"E")(<integer>)>}
+	TOKEN:{<#pos_zero: ("+"|"-")?("0")>}
+
+
+	SKIP:{<["\t"," ","\r","\b","\n"]>}
+	SKIP:{<"#"(~["\n"])*>}
+
+	TOKEN:{<intt: "int">}
+	TOKEN:{<real: "real">}
+	TOKEN:{<bool: "bool">}
+	TOKEN:{<ttrue: "true">}
+	TOKEN:{<ffalse: "false">}
+	TOKEN:{<and: "and">}
+	TOKEN:{<or: "or">}
+	TOKEN:{<not: "not">}
+
+	TOKEN:{<identificador: <letter>(<letter>|<digit>|"_")*>}
+	TOKEN:{<numInt: (["+","-"])?(<pos_digit>)(<digit>)*>}
+	TOKEN:{<numReal:((<integer>)|(<pos_zero>))(<parte_dec>)?(<parte_exp>)?>}
+
+	void Sp()	: {} {S() <EOF>}
+	void S()	: {} {Sd() "&&" Si()}
+	void Sd()	: {} {D() DEC()}
+	void D()	: {} {T() <identificador>}
+	void DEC()	: {} {";" D() DEC() | {}}
+	void T()	: {} {<intt> | <real> | <bool>}
+	void Si()	: {} {I() INS()}
+	void I()	: {} {<identificador> "=" E0()}
+	void INS()	: {} {";" I() INS() | {}}
+	void E0()	: {} {E1() E0_1()}
+	void E0_1()	: {} {"+" E1() E0_1() | "-" E1() E0_1() | {}}
+	void E1()	: {} {E2() E1_1()}
+	void E1_1()	: {} {<and> E1() | <or> E2() | {}}
+	void E2()	: {} {E3() E2_1()}
+	void E2_1()	: {} {OP() E3() | {}}
+	void E3()	: {} {E4() E3_1()}
+	void E3_1()	: {} {"*" E4() E3_1() | "/" E4() E3_1() | {}}
+	void E4()	: {} {"-" E4() | <not> E5() | E5()}
+	void E5()	: {} {"(" E0() ")" | <identificador> | <numReal> | <numInt> | <ttrue> | <ffalse>}
+	void OP()	: {} {"<" | ">" | "<=" | ">=" | "!=" | "=="}
