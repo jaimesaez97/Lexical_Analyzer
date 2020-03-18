@@ -1,0 +1,6 @@
+real hola;
+bool adios;
+real vale
+&&
+hola = (adios / -12e-2) + (26e-15 * -0.0);
+vale = +0.0
