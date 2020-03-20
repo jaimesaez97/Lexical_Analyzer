@@ -15,11 +15,11 @@ public class ALexOperations {
 	}
 	
 	public LexicalUnit unitNumInt() {
-		return new MultivaluatedLexicalUnit(_lexa.row(), LexicalClass.INT, _lexa.lexeme());
+		return new MultivaluatedLexicalUnit(_lexa.row(), LexicalClass.NUMINT, _lexa.lexeme());
 	}
 	
 	public LexicalUnit unitNumReal() {
-		return new MultivaluatedLexicalUnit(_lexa.row(), LexicalClass.REAL, _lexa.lexeme());
+		return new MultivaluatedLexicalUnit(_lexa.row(), LexicalClass.NUMREAL, _lexa.lexeme());
 	}
 	
 	public LexicalUnit unitReal() {

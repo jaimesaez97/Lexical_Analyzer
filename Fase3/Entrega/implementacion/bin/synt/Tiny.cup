@@ -23,25 +23,21 @@ terminal	INT, REAL, BOOL, VAR, TRUE, FALSE,
 		EQUIV, DISEQUIV, PLUS, MINUS, MULT, DIV, NOT,
 		SEMICOLON, END, NUMREAL, NUMINT, OPPAR, CLPAR;
 
-non terminal	S, Sd, D, DEC, T, Si, I, INS, E0, EE0, E1, EE1,
-		E2, EE2, E3, EE3, E4, E5, OP;
+non terminal	S, Sd, D, T, Si, I, E0, E1,
+		E2, E3, E4, E5, OP;
 
 S	::= Sd END Si ;
-Sd	::= D DEC ;
+Sd	::= D | D SEMICOLON Sd ;
 D	::= T VAR ;
-DEC	::= SEMICOLON D DEC | ;
 T	::= INT | REAL | BOOL ;
-Si	::= I INS ;
+
+Si	::= I | I SEMICOLON Si ;
 I	::= VAR EQUAL E0 ;
-INS	::= SEMICOLON I INS | ;
-E0	::= E1 EE0 ;
-EE0	::= PLUS E1 EE0 | MINUS E1 EE0 | ;
-E1	::= E2 EE1 ;
-EE1	::= AND E1 | OR E2 | ;
-E2	::= E3 EE2 ;
-EE2	::= OP E3 | E3 ;
-E3	::= E4 EE3 ;
-EE3	::= MULT E4 E3 | DIV E4 E3 | ;
+
+E0	::= E1 PLUS E1 | E0 MINUS E1 | E1 ;
+E1	::= E2 AND E1 | E2 OR E2 | E2 ;
+E2	::= E3 OP E3 | E3 ;
+E3	::= E3 MULT E4 | E3 DIV E4 | E4 ;
 E4	::= MINUS E4 | NOT E5 | E5 ;
 E5	::= OPPAR E0 CLPAR | VAR | NUMREAL | NUMINT | TRUE | FALSE ;
 OP	::= MINOR | MAYOR | MINOREQUAL | MAYOREQUAL | EQUIV | DISEQUIV ;

@@ -1,4 +1,0 @@
-Al ejecutar "input1.txt", da parse error después del 45.
-	* Creo que es DESPUÉS DE LEER CORRECTAMENTE el 45 (Algo de espacios¿?)
-Al ejecutar "input2.txt", da parse error después del 45.07e-12.
-	* ¿Algo de espacios?
