@@ -259,7 +259,12 @@ SIG(E) = {* }
 SIG(T) = {$}
 SIG(F) = {@, $}
 
-**Hacer FACTORIZACIÓN**.
+**FACTORIZACIÓN**
+
+E → T E'
+E'→ * E' | \e
+T → F @ T | F
+F → n
 
 ### b)
 
@@ -275,7 +280,13 @@ SIG(E) = {* }
 SIG(T) = {$}
 SIG(F) = {@, n, id}
 
-**Hacer FACTORIZACIÓN**.
+**FACTORIZACIÓN**
+
+E → TE'
+T'→ * TE' | \e
+T → FS
+S → @T | F m
+F → n | id
 
 ## EJ.21
 
@@ -293,7 +304,12 @@ SIG(E) = {•}
 SIG(T) = {⊕, $}
 SIG(F) = {⊗, $}
 
-**Hacer FACTORIZACIÓN**.
+**FACTORIZACIÓN**.
+
+E → TE'
+E'→ .TE' | +TE' | \e
+T → F x T | F
+F → n | (E)
 
 ### b)
 
@@ -312,18 +328,38 @@ SIG(B) = {}
 SIG(C) = {}
 SIG(D) = {}
 
+**FACTORIZACIÓN**.
+
+A → B @ B | B + A | B
+B → (+ | \e) C B'
+B'→ <> C B' | \e
+C → D C'
+C'→ + | \e
+D → n | A
+
 ### c)
 
+A → B @ B | B + A | B
+B → B <> C | + C | C
+C → C + | D
+D → n | A
+
+**Igual que el anterior**.
+
+## 22.
+
+E → id = T | T
+T → T * F | F
+F → id | (E)
+
+**FACTORIZACIÓN**
+
+E → id = T | T
+T → F T'
+T'→ * F T' | \e
 
 
-
-
-
-
-
-
-
-
-
-
-
+**PREGUNTA**
+* LL(1) es una gramática NO recursiva por la izquierda y factorizada, ¿verdad?
+* Para que una gramática sea SLR, ¿la tabla solo debe tener un aceptar?
+* 
