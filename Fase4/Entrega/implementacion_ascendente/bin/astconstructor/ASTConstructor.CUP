@@ -29,9 +29,9 @@ terminal 	String  INT, REAL, BOOL, IDEN, END, TRUE, FALSE,
 					NUMINT;
 
 non terminal S;
-non terminal Ds, D;
-non terminal T;
-non terminal Is, I;
+non terminal Ds Ds, D;
+non terminal T T;
+non terminal Is Is, I;
 non terminal E E0, E1, E2, E3, E4, E5;
 
 	S ::= Ds: aDeDs END Is: aDeIs
@@ -59,7 +59,7 @@ non terminal E E0, E1, E2, E3, E4, E5;
 	E0 ::= E0: aDeE0 MINUS E1: aDeE1
 		{: RESULT= as.subtraction(aDeE0, aDeE1); :};
 	E0 ::= E1: aDeE1
-		{: RESULT=aDeE1:};
+		{: RESULT=aDeE1; :};
 	E1 ::= E2: aDeE2 AND E1: aDeE1
 		{: RESULT=as.and(aDeE2, aDeE1); :};
 	E1 ::= E2: aDeE2a OR E2: aDeE2b
@@ -104,3 +104,4 @@ non terminal E E0, E1, E2, E3, E4, E5;
 		{: RESULT=as.eTrue(); :};
 	E5 ::= FALSE
 		{: RESULT=as.eFalse(); :};
+
