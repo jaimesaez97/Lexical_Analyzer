@@ -266,8 +266,8 @@ class CUP$TinySyntaxAnalyzer$actions {
           case 0: // S ::= Ds END Is 
             {
               Object RESULT =null;
-		Ds aDeDs = (Ds)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.elementAt(CUP$TinySyntaxAnalyzer$top-2)).value;
-		Is aDeIs = (Is)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
+		Object aDeDs = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.elementAt(CUP$TinySyntaxAnalyzer$top-2)).value;
+		Object aDeIs = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
 		 RESULT=as.decIns(aDeDs, aDeIs); 
               CUP$TinySyntaxAnalyzer$result = parser.getSymbolFactory().newSymbol("S",0, RESULT);
             }
@@ -289,7 +289,7 @@ class CUP$TinySyntaxAnalyzer$actions {
           case 2: // Ds ::= D 
             {
               Object RESULT =null;
-		Ds aDeD = (Ds)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
+		Object aDeD = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
 		 RESULT=as.dSimple(aDeD.id(), aDeD.tipoT()); 
               CUP$TinySyntaxAnalyzer$result = parser.getSymbolFactory().newSymbol("Ds",1, RESULT);
             }
@@ -299,8 +299,8 @@ class CUP$TinySyntaxAnalyzer$actions {
           case 3: // Ds ::= D SEMICOLON Ds 
             {
               Object RESULT =null;
-		Ds aDeD = (Ds)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.elementAt(CUP$TinySyntaxAnalyzer$top-2)).value;
-		Ds aDeDs = (Ds)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
+		Object aDeD = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.elementAt(CUP$TinySyntaxAnalyzer$top-2)).value;
+		Object aDeDs = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
 		 RESULT=as.dCompuesta(aDeDs, aDeD.id(), aDeD.tipoT()); 
               CUP$TinySyntaxAnalyzer$result = parser.getSymbolFactory().newSymbol("Ds",1, RESULT);
             }
@@ -310,7 +310,7 @@ class CUP$TinySyntaxAnalyzer$actions {
           case 4: // D ::= T IDEN 
             {
               Object RESULT =null;
-		T aDeT = (T)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.elementAt(CUP$TinySyntaxAnalyzer$top-1)).value;
+		Object aDeT = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.elementAt(CUP$TinySyntaxAnalyzer$top-1)).value;
 		String lexDeIden = (String)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
 		 RESULT=as.dSimple(lexDeIden, aDeT); 
               CUP$TinySyntaxAnalyzer$result = parser.getSymbolFactory().newSymbol("D",2, RESULT);
@@ -348,7 +348,7 @@ class CUP$TinySyntaxAnalyzer$actions {
           case 8: // Is ::= I 
             {
               Object RESULT =null;
-		Is aDeI = (Is)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
+		Object aDeI = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
 		 RESULT=as.iSimple(aDeI.id(), aDeI.exp()); 
               CUP$TinySyntaxAnalyzer$result = parser.getSymbolFactory().newSymbol("Is",4, RESULT);
             }
@@ -358,8 +358,8 @@ class CUP$TinySyntaxAnalyzer$actions {
           case 9: // Is ::= I SEMICOLON Is 
             {
               Object RESULT =null;
-		Is aDeI = (Is)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.elementAt(CUP$TinySyntaxAnalyzer$top-2)).value;
-		Is aDeIs = (Is)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
+		Object aDeI = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.elementAt(CUP$TinySyntaxAnalyzer$top-2)).value;
+		Object aDeIs = (Object)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
 		 RESULT=as.iCompuesta(aDeIs, aDeI.id(), aDeI.exp()); 
               CUP$TinySyntaxAnalyzer$result = parser.getSymbolFactory().newSymbol("Is",4, RESULT);
             }
@@ -403,7 +403,7 @@ class CUP$TinySyntaxAnalyzer$actions {
             {
               E RESULT =null;
 		E aDeE1 = (E)((java_cup.runtime.Symbol) CUP$TinySyntaxAnalyzer$stack.peek()).value;
-		 RESULT=aDeE1;
+		 RESULT=aDeE1
               CUP$TinySyntaxAnalyzer$result = parser.getSymbolFactory().newSymbol("E0",6, RESULT);
             }
           return CUP$TinySyntaxAnalyzer$result;
@@ -659,3 +659,4 @@ class CUP$TinySyntaxAnalyzer$actions {
                                CUP$TinySyntaxAnalyzer$top);
     }
 }
+

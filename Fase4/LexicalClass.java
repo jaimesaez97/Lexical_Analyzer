@@ -39,3 +39,4 @@ public class LexicalClass {
   public static final int REAL = 3;
   public static final int NONEQUIV = 22;
 }
+
