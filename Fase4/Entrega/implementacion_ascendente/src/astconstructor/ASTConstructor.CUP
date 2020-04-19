@@ -38,7 +38,7 @@ non terminal E E0, E1, E2, E3, E4, E5;
 		{: RESULT=as.decIns(aDeDs, aDeIs); :};
 	Ds::= D: aDeD
 		{: RESULT=as.dSimple(aDeD.id(), aDeD.tipoT()); :};
-	Ds::= D: aDeD SEMICOLON Ds:aDeDs
+	Ds::= Ds: aDeDs SEMICOLON D:aDeD
 		{: RESULT=as.dCompuesta(aDeDs, aDeD.id(), aDeD.tipoT()); :};
 	D ::= T: aDeT IDEN: lexDeIden
 		{: RESULT=as.dSimple(lexDeIden, aDeT); :};
@@ -50,7 +50,7 @@ non terminal E E0, E1, E2, E3, E4, E5;
 		{: RESULT=as.tBool(); :};
 	Is ::= I: aDeI
 		{: RESULT=as.iSimple(aDeI.id(), aDeI.exp()); :};
-	Is ::= I: aDeI SEMICOLON Is:aDeIs
+	Is ::= Is: aDeIs SEMICOLON I:aDeI
 		{: RESULT=as.iCompuesta(aDeIs, aDeI.id(), aDeI.exp()); :};
 	I ::= IDEN: lexDeIden EQUAL E0: aDeE
 		{: RESULT=as.iSimple(lexDeIden, aDeE); :};
