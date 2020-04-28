@@ -144,8 +144,7 @@ public class ASTTinyConstructor implements ASTTinyConstructorConstants {
     case 25:{
       jj_consume_token(25);
       e1 = E1();
-      e0 = EE0(as.subtraction(e, e1));
-{if ("" != null) return e0;}
+{if ("" != null) return as.subtraction(e, e1);}
       break;
       }
     default:
@@ -221,15 +220,13 @@ public class ASTTinyConstructor implements ASTTinyConstructorConstants {
     case 26:{
       jj_consume_token(26);
       e4 = E4();
-      e3 = EE3(as.mult(e, e4));
-{if ("" != null) return e3;}
+{if ("" != null) return as.mult(e, e4);}
       break;
       }
     case 27:{
       jj_consume_token(27);
       e4 = E4();
-      e3 = EE3(as.div(e, e4));
-{if ("" != null) return e3;}
+{if ("" != null) return as.div(e, e4);}
       break;
       }
     default:
