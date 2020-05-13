@@ -1,0 +1,182 @@
+package astconstructor;
+
+import java_cup.runtime.*;
+import lex.TinyLexicalAnalyzer;
+import lex.LexicalUnit;
+import err.TinyErrorMgmt;
+import ast.*;
+
+scan with {: return getScanner().next_token(); :};
+action code {:
+	private ASTiny as = new ASTiny();
+:};
+parser code{:
+	private TinyErrorMgmt error;
+	public void syntax_error(Symbol lexicalUnit){
+		error.syntaxError((LexicalUnit) lexicalUnit);
+	}
+:};
+init with{:
+	error = new TinyErrorMgmt();
+	TinyLexicalAnalyzer lex = (TinyLexicalAnalyzer)getScanner();
+	lex.setErrorMgmt(error);
+:};
+
+terminal 	String  END, MAS, MENOS, MULT, DIV, RESTO, MAYOR, MENOR,
+					MAYORIGUAL, MENORIGUAL, EQUIV, NONEQUIV, PARAB,
+					PARCE, PYCOMA, IGUAL, CORAB, CORCE, LLAAB, LLACE,
+					PUNTO, FLECHA, COMA, UMPERSAND, INT, REAL, BOOL, 
+					IDEN, STRING, AND, OR, NOT,	NULL, TRUE, FALSE, 
+					PROC, IF, THEN, ELSE, ENDIF, WHILE, DO, ENDWHILE, 
+					CALL, RECORD, ARRAY, OF, POINTER, NEW, DELETE, 
+					READ, WRITE, NL, VAR, TYPE, NUMINT, NUMREAL, CADENA;
+
+non terminal Programa;
+non terminal Sd Sd, D;
+non terminal Sp Parametros, Sp, P;
+non terminal T T;
+non terminal Sc Sc, C;
+non terminal Si Si, I;
+non terminal B B;
+non terminal E E0, E1, E2, E3, E4, E5, E6, E7;
+
+	Programa::= Si: si
+		{: RESULT= as.progIns(si); :};
+	Programa::= Sd: sd END Si: si
+		{: RESULT= as.decIns(sd, si); :};
+	Sd::= D: dec
+		{: RESULT= as.dSimple(dec); :};
+	Sd::= D: dec PYCOMA Sd: sd
+		{: RESULT= as.dCompuesta(sd, dec); :};
+	D::= VAR T: tipo IDEN: id_lex
+		{: RESULT= as.decVar(tipo, id_lex); :};
+	D::= TYPE T: tipo IDEN: id_lex
+		{: RESULT= as.decTipo(tipo, id_lex); :};
+	D::= PROC IDEN: id_lex Parametros: param B: bloque
+		{: RESULT= as.decProc(id_lex, param, bloque); :};
+	Parametros::= PARAB Sp: sp PARCE
+		{: RESULT= as.secParam(sp); :};
+	Sp::= P: param
+		{: RESULT= as.parSimple(p.type(), p.id()); :};
+	Sp::= P: param PYCOMA Sp: sp
+		{: RESULT= as.parCompuesta(p.type(), p.id(), sp); :};
+	P::= T: tipo UMPERSAND IDEN: id_lex
+		{: RESULT= as.parSimple(tipo, id_lex); :};
+	P::= T: tipo IDEN: id_lex
+		{: RESULT= as.parSimple(tipo, id_lex); :};
+	T::= INT
+		{: RESULT= as.tInt(); :};
+	T::= REAL
+		{: RESULT= as.tReal(); :};
+	T::= BOOL
+		{: RESULT= as.tBool(); :};
+	T::= STRING
+		{: RESULT= as.tString(); :};
+	T::= IDEN: id_lex
+		{: RESULT= as.tIden(id_lex); :};
+	T::= ARRAY CORAB NUMINT: tam CORCE OF T: tipo
+		{: RESULT= as.tArray(tam, tipo); :};
+	T::= RECORD LLAAB Sc: sc LLACE
+		{: RESULT= as.tRecord(sc); :};
+	T::= POINTER T: tipo
+		{: RESULT= as.tPointer(tipo); :};
+	Sc:= C: c
+		{: RESULT= as.campoSimple(c.tipo(), c.id()); :};
+	Sc:= C: c PYCOMA Sc: sc
+		{: RESULT= as.campoCompuesto(c.tipo(), c.id(), sc); :};
+	C::= T: tipo IDEN: id_lex
+		{: RESULT= as.campoSimple(tipo, id_lex); :};
+	Si::= I: ins
+		{: RESULT= as.insSimple(ins); :};
+	Si::= I: ins PYCOMA Si: si
+		{: RESULT= as.insCompuesta(ins, si.a); :};
+	I::= E0: e0_0 IGUAL E0:e0_1
+		{: RESULT= as.insAsig(e0_0, e0_1); :};
+	I::= IF E0: e0 THEN Si: si ENDIF
+		{: RESULT= as.insIf(e0, si); :};
+	I::= IF E0: e0 THEN Si: si0 ELSE Si: si1 ENDIF
+		{: RESULT= as.insIfElse(e0, si0, si1); :};
+	I::= WHILE E0: e0 DO Si: si ENDWHILE
+		{: RESULT= as.insWhile(e0, si); :};
+	I::= READ E0: e0
+		{: RESULT= as.insRead(e0); :};
+	I::= WRITE E0: e0
+		{: RESULT= as.insWrite(e0); :};
+	I::= NL
+		{: RESULT= as.insNl(); :};
+	I::= NEW E0: e0
+		{: RESULT= as.insNew(e0); :};
+	I::= DELETE E0: e0
+		{: RESULT= as.insDelete(e0); :};
+	I::= CALL IDEN: id_lex Parametros: param
+		{: RESULT= as.insCall(id_lex, param); :};
+	I::= B: b
+		{: RESULT= as.insBloque(b); :};
+	B::= LLAAB Programa: p LLACE
+		{: RESULT= as.bloque(p); :};
+	E0::= E1: e1 MAS E0: e0
+		{: RESULT= as.suma(e1, e0); :};
+	E0::= E1: e1_0 MENOS E1:e1_1
+		{: RESULT= as.resta(e1, e0); :};
+	E0::= E1: e1
+		{: RESULT=e1; };
+	E1::= E1: e1 AND E2: e2
+		{: RESULT= as.and(e1, e2); :};
+	E1::= E1: e1 OR E2: e2
+		{: RESULT= as.or(e1, e2); :};
+	E1::= E2: e2
+		{: RESULT=e2; :};
+	E2::= E2: e2 MENOR E3: e3
+		{: RESULT= as.menor(e2, e3); :};
+	E2::= E2: e2 MAYOR E3: e3
+		{: RESULT= as.mayor(e2, e3); :};
+	E2::= E2: e2 MENORIGUAL E3: e3
+		{: RESULT= as.menorIgual(e2, e3); :};
+	E2::= E2: e2 MAYORIGUAL E3: e3
+		{: RESULT= as.mayorIgual(e2, e3); :};
+	E2::= E2: e2 EQUIV E3: e3
+		{: RESULT= as.equiv(e2, e3); :};
+	E2::= E2: e2 NONEQUIV E3: e3
+		{: RESULT= as.nonEquiv(e2, e3); :};
+	E2::= E3: e3
+		{: RESULT=e3; :};
+	E3::= E4: e4_0 MULT E4: e4_1
+		{: RESULT= as.mult(e4_0, e4_1); :};
+	E3::= E4: e4_0 DIV E4: e4_1
+		{: RESULT= as.div(d4_0, e4_1); :};
+	E3::= E4: e4_0 RESTO E4: e4_1
+		{: RESULT= as.resto(d4_0, d4_1); :};
+	E3::= E4: e4
+		{: RESULT=e4; :};
+	E4::= NOT E4: e4
+		{: RESULT= as.not(e4); :};
+	E4::= MENOS E5: e5
+		{: RESULT= as.menos(e5); :};
+	E4::= E5: e5
+		{: RESULT=e5; :};
+	E5::= CORAB E0: e0 CORCE
+		{: RESULT= as.index(e0); :};
+	E5::= PUNTO IDEN: id_lex
+		{: RESULT= as.access(id_lex); :};
+	E5::= FLECHA IDEN: id_lex
+		{: RESULT= as.access(id_lex); :};
+	E5::= E6: e6
+		{: RESULT=e6; :};
+	E6::= MULT E6: e6
+		{: RESULT= as.indirec(e6); :};
+	E6::= E7: e7
+		{: RESULT=e7; :};
+	E7::= NUMINT: int_lex
+		{: RESULT= as.numInt(int_lex); :};
+	E7::= NUMREAL: real_lex
+		{: RESULT= as.numReal(real_lex); :};
+	E7::= TRUE
+		{: RESULT= as.true(); :};
+	E7::= FALSE
+		{: RESULT= as.false(); :};
+	E7::= CADENA: cad_lex
+		{: RESULT= as.cadena(cad_lex); :};
+	E7::= IDEN: id_lex
+		{: RESULT= as.iden(id_lex); :};
+	E7::= NULL
+		{: RESULT= as.null(); :};
