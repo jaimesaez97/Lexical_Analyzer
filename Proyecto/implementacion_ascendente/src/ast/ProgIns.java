@@ -2,14 +2,14 @@ package ast;
 
 public class ProgIns extends Programa {
 
-	private Si ins;
+	private Instrucciones ins;
 	
-	public ProgIns(Si ins) {
+	public ProgIns(Instrucciones ins) {
 		this.ins = ins;
 	}
 	
 	@Override
-	public Si ins() {
+	public Instrucciones ins() {
 		return this.ins;
 	}
 

@@ -7,22 +7,22 @@ import ast.TArray;
 public class ASProyect {
 
 		/* Program constructors */
-	public Programa progIns(Si si) { return new ProgIns(si); }
-	public Programa decIns(Si si, Sd sd) {return new DecIns(si, sd); }
+	public Programa progIns(Instrucciones si) { return new ProgIns(si); }
+	public Programa decIns(Instrucciones si, Declaraciones sd) {return new DecIns(si, sd); }
 	
 		/* Declaration section constructors */
-	public Sd dSimple(DSimple dec) {return new DSimple(dec); }
-	public Sd dCompuesta(Sd sd, DSimple dec) {return new DCompuesta(sd, dec); }
+	public Declaraciones dSimple(Declaracion dec) {return new DeclaracionesUna(dec); }
+	public Declaraciones dCompuesta(Declaraciones sd, Declaracion dec) {return new DeclaracionesMuchas(sd, dec); }
 
 		/* Declaration constructors */
-	public DSimple decVar(T tipo, String id_lex) {return new DecVar(id_lex, tipo); }
-	public DSimple decTipo(T tipo, String id_lex) {return new DecType(id_lex, tipo); }
-	public DSimple decProc(String id_lex, Sp param, B bloque) {return new DecProc(id_lex, param, bloque); }
+	public Declaracion decVar(T tipo, String id_lex) {return new DecVariable(tipo, id_lex); }
+	public Declaracion decTipo(T tipo, String id_lex) {return new DecTipo(tipo, id_lex); }
+	public Declaracion decProc(String id_lex, Parametros param, B bloque) {return new DecProceso(id_lex, param, bloque); }
 	
 		/* Parameter constructors */
-	public Sp parSimple(T tipo, String id_lex) { return new PSimple(id_lex, tipo); }
-	public Sp parCompuesta(T tipo, String id_lex, Sp param) {return new PCompuesto(param, tipo, id_lex, true); }
 	public Parametros secParam(Sp p) {return new Parametros(p); }
+	public PSimple parSimple(T tipo, String id_lex) { return new PSimple(id_lex, tipo); }
+	public PCompuesto parCompuesta(T tipo, String id_lex, Sp param) {return new PCompuesto(param, tipo, id_lex); }
 	
 		/* Type constructors */
 	public T tInt() {return new TInt(); }
@@ -30,30 +30,30 @@ public class ASProyect {
 	public T tBool() { return new TBool(); }
 	public T tString() {return new TString(); }
 	public T tIden(String name) {return new TIden(name); }
-	public T tArray(int tam, T tipo) {return new TArray(tam, tipo); }
+	public T tArray(String tam, T tipo) {return new TArray(tam, tipo); }
 	public T tRecord(Sc campos) {return new TRecord(campos); }
 	public T tPointer(T tipo) {return new TPointer(tipo); }
 	
 		/* Field constructors */
 	public Sc campoSimple(T tipo, String id_lex) {return new CSimple(tipo, id_lex); }
-	public Sc campoCompuesta(T tipo, String id_lex, Sc campos) {return new CCompuesta(tipo, id_lex, campos); }
+	public Sc campoCompuesto(T tipo, String id_lex, Sc campos) {return new CCompuesto(tipo, id_lex, campos); }
 		
 		/* Instruction section constructors */
-	public Si iSimple(ISimple ins) {return new Si(); }
-	public Si iCompuesta(ISimple ins, Si si) {return new ICompuesta(); }
+	public Instrucciones iSimple(Instruccion ins) {return new InstruccionesUna(ins); }
+	public Instrucciones iCompuesta(Instrucciones instr, Instruccion ins) {return new InstruccionesMuchas(instr, ins); }
 	
 		/* Instruction constructors */
-	public ISimple insAsig(E opnd1, E opnd2) {return new Asig(opnd1, opnd2); }
-	public ISimple insIf(E opnd, Si ins) {return new If(opnd, ins); }
-	public ISimple insIfElse(E opnd, Si ins1, Si ins2) {return new IfElse(opnd, ins1, ins2); }
-	public ISimple insWhile(E opnd, Si ins) {return new While(opnd, ins); }
-	public ISimple insRead(E opnd) {return new Read(opnd); }
-	public ISimple insWrite(E opnd) {return new Write(opnd); }
-	public ISimple insNl() {return new Nl(); }
-	public ISimple insNew(E opnd) {return new New(opnd); }
-	public ISimple insDelete(E opnd) {return new Delete(opnd); }
-	public ISimple insCall(String id, Parametros p) {return new Call(id, p); }
-	public ISimple insBloque(B bloque) {return new InsBloque(bloque); }
+	public Instruccion insAsig(E opnd1, E opnd2) {return new Asig(opnd1, opnd2); }
+	public Instruccion insIf(E opnd, Instrucciones ins) {return new If(opnd, ins); }
+	public Instruccion insIfElse(E opnd, Instrucciones ins1, Instrucciones ins2) {return new IfElse(opnd, ins1, ins2); }
+	public Instruccion insWhile(E opnd, Instrucciones ins) {return new While(opnd, ins); }
+	public Instruccion insRead(E opnd) {return new Read(opnd); }
+	public Instruccion insWrite(E opnd) {return new Write(opnd); }
+	public Instruccion insNl() {return new Nl(); }
+	public Instruccion insNew(E opnd) {return new New(opnd); }
+	public Instruccion insDelete(E opnd) {return new Delete(opnd); }
+	public Instruccion insCall(String id, Parametros p) {return new Call(id, p); }
+	public Instruccion insBloque(B bloque) {return new InsBloque(bloque); }
 		
 		/* Block constructor */
 	public B bloque(Programa p) {return new B(p); }
@@ -85,7 +85,7 @@ public class ASProyect {
 
 		/* Access operations */
 	public E index(E opnd) {return new Index(opnd); }
-	public E access(E opnd1) {return new Access(opnd1); }
+	public E access(String id) {return new Access(id); }
 
 	public E indirect(E opnd) {return new Indirect(opnd); }
 

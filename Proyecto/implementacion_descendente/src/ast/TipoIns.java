@@ -1,0 +1,5 @@
+package ast;
+
+public enum TipoIns {
+	INS_ASIG, INS_IF, INS_IFELSE, INS_WHILE, INS_READ, INS_WRITE, INS_NL, INS_NEW, INS_DELETE, INS_CALL, INS_BLOQUE
+}

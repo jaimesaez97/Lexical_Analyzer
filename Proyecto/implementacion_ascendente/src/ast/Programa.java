@@ -2,11 +2,11 @@ package ast;
 
 public abstract class Programa {
 
-	public Sd decs() {
+	public Declaraciones decs() {
 		throw new UnsupportedOperationException("decs");
 	}
 	
-	public Si ins() {
+	public Instrucciones ins() {
 		throw new UnsupportedOperationException("ins");
 	}
 	

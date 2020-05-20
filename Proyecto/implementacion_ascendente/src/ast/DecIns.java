@@ -2,10 +2,10 @@ package ast;
 
 public class DecIns extends Programa {
 	
-	private Si ins;
-	private Sd decs;
+	private Instrucciones ins;
+	private Declaraciones decs;
 	
-	public DecIns(Si ins, Sd decs) {
+	public DecIns(Instrucciones ins, Declaraciones decs) {
 		this.ins = ins;
 		this.decs = decs;
 	}
@@ -16,12 +16,12 @@ public class DecIns extends Programa {
 	}
 
 	@Override
-	public Si ins() {
+	public Instrucciones ins() {
 		return this.ins;
 	}
 	
 	@Override
-	public Sd decs() {
+	public Declaraciones decs() {
 		return this.decs;
 	}
 	

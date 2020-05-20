@@ -1,0 +1,199 @@
+options {
+	STATIC=false;
+}
+PARSER_BEGIN(ASTProyectConstructor)
+package astconstructor;
+
+import ast.*;
+
+public class ASTProyectConstructor{
+	private ASProyect as = new ASProyect();
+	private final static int MAYOR=0;
+	private final static int MINOR=1;
+	private final static int MAYOREQUAL=2;
+	private final static int MINOREQUAL=3;
+	private final static int EQUIV=4;
+	private final static int NONEQUIV=5;
+}
+PARSER_END(ASTProyectConstructor)
+	TOKEN:{<#letter:["a"-"z","A"-"Z"]>}
+	TOKEN:{<#digPos:["1"-"9"]>}
+	TOKEN:{<#posZero: ("+"|"-")? ("0") >}
+	TOKEN:{<#digit:(<digPos>) | "0">}
+	
+	SKIP:{<["\t", " ", "\r", "\b", "\n"]>}
+	SKIP:{<"#"(~["\n"])*>}
+	
+	TOKEN:{<identificador: <letter> (<letter>|<digit>|"_")*>}
+	TOKEN:{<numInt:("+"|"-")? (<digPos>)(<digit>)*>}
+	TOKEN:{<#decimal: "."(<digit>)*(<digPos>)>}
+	TOKEN:{<#exponencial: ("e"|"E") (<numInt>)>}
+	TOKEN:{<numReal: (<numInt> | <posZero>)(<decimal>)?(<exponencial>)?>}
+	TOKEN:{<cadena: "">}
+	TOKEN:{<ttrue: "true">}
+	TOKEN:{<ffalse: "false">}
+	TOKEN:{<nulo: "null">}
+	TOKEN:{<of:"of">}
+	TOKEN:{<iff:"if">}
+	TOKEN:{<endif:"endif">}
+	TOKEN:{<nl:"nl">}
+	TOKEN:{<doo:"do">}
+	TOKEN:{<or:"or">}
+	TOKEN:{<and:"and">}
+	TOKEN:{<var:"var">}
+	TOKEN:{<iint:"int">}
+	TOKEN:{<not:"not">}
+	TOKEN:{<nnew:"new">}
+	TOKEN:{<proc:"proc">}
+	TOKEN:{<read:"read">}
+	TOKEN:{<type:"type">}
+	TOKEN:{<eelse:"else">}
+	TOKEN:{<real:"real">}
+	TOKEN:{<bool:"bool">}
+	TOKEN:{<call:"call">}
+	TOKEN:{<then:"then">}
+	TOKEN:{<wwhile:"while">}
+	TOKEN:{<write:"write">}
+	TOKEN:{<array:"array">}
+	TOKEN:{<record:"record">}
+	TOKEN:{<ddelete:"delete">}
+	TOKEN:{<sstring:"string">}
+	TOKEN:{<pointer:"pointer">}
+	TOKEN:{<endwhile:"endwhile">}
+	TOKEN:{<semicolon:";">}
+	TOKEN:{<end:"&&">}
+	TOKEN:{<corAb:"[">}
+	TOKEN:{<corCe:"]">}
+	TOKEN:{<parAb:"(">}
+	TOKEN:{<parCe:")">}
+	TOKEN:{<llaAb:"{">}
+	TOKEN:{<llaCe:"}">}
+	TOKEN:{<punto:".">}
+	TOKEN:{<flecha:"->">}
+	TOKEN:{<menos:"-">}
+	TOKEN:{<mas:"+">}
+	TOKEN:{<mult:"*">}
+	TOKEN:{<div:"/">}
+	TOKEN:{<resto:"%">}
+	TOKEN:{<mayor:">">}
+	TOKEN:{<mayorIgual:">=">}
+	TOKEN:{<menor:"<">}
+	TOKEN:{<menorIgual:"<=">}
+	TOKEN:{<equiv:"==">}
+	TOKEN:{<nonEquiv:"!=">}
+
+
+
+
+
+	Programa Programa()		: {RPrograma ast; Instrucciones ins;} {ins=Instrucciones() ast=RPrograma(ins) {return as.prog(ast,ins);}}
+	
+	RPrograma RPrograma(Instrucciones ins)	: {Declaraciones decs;} {decs=Declaraciones() <end> {return as.decIns(ins, decs);} |
+																    {return as.progIns(ins);}}
+	
+	Declaraciones Declaraciones()	: {Declaracion dec; Declaraciones decs;} {dec=Declaracion() decs=Declaraciones2(as.dSimple(dec)) {return decs;}}
+	
+	Declaraciones Declaraciones2(Declaraciones decs)	: {Declaracion dec; Declaraciones decs2;} {<semicolon> dec=Declaracion() decs2=Declaraciones2(decs) {return as.dCompuesta(decs2, dec);}	|
+																									{return decs;} }
+	
+	Declaracion Declaracion()		: {T tipo; Token id; Parametros param; B bloque;} {<var> tipo=T() id=<identificador> {return as.decVar (tipo, id.image);}	|
+																					<type> tipo=T() id=<identificador> {return as.decTipo(tipo, id.image);}		|
+																					<proc> id=<identificador> param=Parametros() bloque=B() {return as.decProc(id.image, param, bloque);} }
+	Parametros Parametros()			: {Sp param;} {<parAb> param=Sp() <parCe> {return as.secParam(param);}}
+	
+	Sp Sp()				: {T tipo; Token id; Sp sp;}	{tipo=T() id=<identificador> sp=Sp2(as.parSimple(tipo, id.image)) {return sp;}}
+	
+	Sp Sp2(Sp param)	: {T tipo; Token id; Sp sp;} 	{tipo=T() id=<identificador> sp=Sp2(as.parCompuesta(tipo, id.image, param)) {return sp;} 	| 
+														 {return param;}}
+	
+	T T()			: {Token t; T tipo; Sc c;} {<iint> {return as.tInt();} 		|
+															<real> {return as.tReal();}	|
+															<bool> {return as.tBool();}	|
+															<sstring> {return as.tString();}	|
+															t = <identificador> {return as.tIden(t.image);}	|
+															<array> "[" t=<numInt> "]" "of" tipo=T()	{return as.tArray(t.image, tipo);}	|
+															<record> "{" c=Campos() "}" {return as.tRecord(c);}	|
+															<pointer> tipo=T() {return as.tPointer(tipo);}
+															}
+	
+	Sc Campos()			: {T tipo; Token id; Sc cs;} {id=<identificador> tipo=T() cs=Campos2(as.campoSimple(tipo, id.image)) {return cs;} }
+	
+	Sc Campos2(Sc c2)	: {T tipo; Token id; Sc cs;} {<semicolon> tipo=T() id=<identificador> cs=Campos2(as.campoCompuesto(tipo, id.image, c2)) {return cs;} |
+															{return c2;}}
+	
+	Instrucciones Instrucciones()	: {Instruccion ins; Instrucciones instr;} {ins=Instruccion() instr=Instrucciones2(as.iSimple(ins)) {return instr;}}
+	
+	Instrucciones Instrucciones2(Instrucciones ins2)	: {Instruccion ins; Instrucciones instr;} {<semicolon> ins=Instruccion() instr=Instrucciones2(as.iCompuesta(ins2, ins)) {return instr;} 	|
+														{return ins2;}}
+
+	Instruccion Instruccion() : {E e0_0; E e0_1; Instrucciones si1; Instrucciones si2; Token t; B bloque; Parametros p;}	
+				{
+				e0_0=E0() "=" e0_1=E0() {return as.insAsig(e0_0, e0_1);}	|
+				<iff> e0_0=E0() "then" si1=Instrucciones() <endif> {return as.insIf(e0_0, si1);} 	| 
+				<iff> e0_0=E0() "then" si1=Instrucciones() <eelse> si2=Instrucciones() <endif> {return as.insIfElse(e0_0, si1, si2); }	|
+				<wwhile> e0_0=E0() <doo> si1=Instrucciones() <endwhile> {return as.insWhile(e0_0, si1);}	|
+				<read> e0_0=E0() {return as.insRead(e0_0);}	|
+				<write> e0_0=E0() {return as.insWrite(e0_0);}	|
+				<nl> {return as.insNl();}	|
+				<nnew> e0_0=E0() {return as.insNew(e0_0);}	|
+				<ddelete> e0_0=E0() {return as.insDelete(e0_0);}	|
+				<call> t=<identificador> p=Parametros() {return as.insCall(t.image, p);}
+				bloque=B() {return as.insBloque(bloque);}
+				}
+	
+	B B()		: {Programa p;} {<llaAb> p=Programa() <llaCe> {return as.bloque(p);}}
+	
+	E E0()				: {E e1; E e0;} {e1=E1() e0=EE0(e1) {return e0;}}
+	
+	E EE0(E e1)		: {E e0; E e1_1;} {<mas> e0=E0() {return as.suma(e1, e0);} 	|
+											<menos> e1_1=E1() {return as.resta(e1, e1_1);}	|
+											{return e1;} 	
+							  				}
+	
+	E E1()				: {E e2; E e1;} {e2=E2() e1=EE1(e2) {return e1;}}
+	
+	E EE1(E e2_1)	: {E e2; E e1;}  {<and> e2=E2() e1=EE1(as.and(e2_1, e2)) {return e1;}	|
+											<or> e2=E2() e1=EE1(as.or(e2_1, e2)) {return e1;}	|
+											{return e2_1;} }
+	
+	E E2()				: {E e3; E e2;} {e3=E3() e2=EE2(e3) {return e2;}}
+	
+	E EE2(E e3_1)	: {E e3; E e2;} {<mayor> e3=E3() e2=EE2(as.mayor(e3_1, e3)) {return e2;} |
+										   <menor> e3=E3() e2=EE2(as.menor(e3_1, e3)) {return e2;} |
+										   <mayorIgual> e3=E3() e2=EE2(as.mayorIgual(e3_1, e3)) {return e2;} |
+										   <menorIgual> e3=E3() e2=EE2(as.menorIgual(e3_1, e3)) {return e2;} |
+										   <equiv> e3=E3() e2=EE2(as.equiv(e3_1, e3)) {return e2;} |
+										   <nonEquiv> e3=E3() e2=EE2(as.nonEquiv(e3_1, e3)) {return e2;} |
+										   {return e3_1;} }
+
+	E E3()				: {E e4; E e3;} {e4=E4() e3=EE3(e4) {return e3;}}
+	
+	E EE3(E e4_1)	: {E e4; E e3;} {<mult> e4=E4() e3=EE3(as.mult(e4_1, e4)) {return e3;}	|
+											<div> e4=E4() e3=EE3(as.div(e4_1, e4)) {return e3;} 	|
+											<resto> e4=E4() e3=EE3(as.resto(e4_1, e4)) {return e3;} }
+
+	E E4()				: {E e4; E e5;} {<not> e4=E4() {return as.not(e4);}	|
+											<menos> e5=E5() {return as.neg(e5);}} 
+	
+	E E5()				: {E e0; E e6; Token t;} {<corAb> e0=E0() <corCe> {return as.index(e0);}	|
+													<punto> t=<identificador> {return as.access(t.image);}	|
+													<flecha> t=<identificador> {return as.access(t.image);} 	|
+													e6=E6() {return e6;}}
+
+	E E6()				: {E e6; E e7;} {<mult> e6=E6() {return e6;}	|
+											e7=E7() {return e7;}}
+	
+	E E7()				: {Token t; E e0;}	{<parAb> e0=E0() <parCe> {return e0;}	|
+												t=<numInt> {return as.numInt(t.image);}	|
+												t=<numReal> {return as.numReal(t.image);} |
+												t=<ttrue> {return as.ttrue();} |
+												t=<ffalse> {return as.ffalse();} |
+												t=<cadena> {return as.cadena(t.image);} |
+												t=<identificador> {return as.iden(t.image);} |
+												t=<nulo> {return as.nulo();} }
+	
+	
+	
+	
+	
+	
